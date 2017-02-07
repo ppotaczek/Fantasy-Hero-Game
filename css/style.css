@@ -1,0 +1,22 @@
+* {
+  box-sizing: border-box;
+  font-family: 'Raleway', sans-serif;
+  overflow: hidden;
+}
+.container {
+  position: relative;
+  width: 1000px;
+  height: 700px;
+  margin: 40px auto;
+  border: 2px solid gray;
+  background-image: url("..//images/Battleback_snow.png");
+  background-size: cover;
+}
+.sprite {
+  background-image: url("..//images/sprite.png");
+  width: 100px;
+  height: 100px;
+  background-size: cover;
+  position: absolute;
+  top: 400px;
+}
