@@ -14,9 +14,21 @@
 }
 .sprite {
   background-image: url("..//images/sprite.png");
-  width: 100px;
-  height: 100px;
-  background-size: cover;
+  width: 63px;
+  height: 113px;
+  background-position: 0 0;
+  background-repeat: no-repeat;
   position: absolute;
   top: 400px;
+}
+.spriteShoot {
+  background-image: url("..//images/sprite3.png");
+  width: 155px;
+}
+.bullet {
+  width: 60px;
+  height: 40px;
+  background-image: url("..//images/fireball.png");
+  background-size: cover;
+  position: absolute;
 }
