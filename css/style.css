@@ -3,14 +3,33 @@
   font-family: 'Raleway', sans-serif;
   overflow: hidden;
 }
+body {
+  background-image: url("..//images/body.jpg");
+  background-size: cover;
+  height: 100vh;
+}
 .container {
   position: relative;
   width: 1000px;
   height: 700px;
-  margin: 40px auto;
+  margin: 0 auto;
+  margin-top: 20px;
   border: 2px solid gray;
-  background-image: url("..//images/Battleback_snow.png");
+  background-image: url("..//images/Battleback_snow2.png");
   background-size: cover;
+}
+.panel {
+  position: relative;
+  margin: 0 auto;
+  width: 1000px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.panelElem {
+  margin-right: 50px;
+  display: inline-block;
+  color: aqua;
+  line-height: 50px;
 }
 .sprite {
   background-image: url("..//images/sprite.png");
@@ -20,6 +39,10 @@
   background-repeat: no-repeat;
   position: absolute;
   top: 400px;
+  z-index: 1;
+}
+.hit {
+
 }
 .spriteShoot {
   background-image: url("..//images/sprite3.png");
@@ -31,4 +54,42 @@
   background-image: url("..//images/fireball.png");
   background-size: cover;
   position: absolute;
+}
+.enemy {
+  z-index: 3;
+}
+.enemyMummy {
+  right: -100px;
+  width: 123px;
+  height: 167px;
+  background-image: url("..//images/mummy1.png");
+  position: absolute;
+  background-position: -1107px 0;
+}
+.enemyMummy2 {
+  transform: translateY(-34px);
+  background-image: url("..//images/mummy2.png");
+  height: 203px;
+}
+.enemyBehemoth {
+  right: -100px;
+  width: 270px;
+  height: 264px;
+  background-image: url("..//images/behemoth.png");
+  position: absolute;
+  background-position: -2436px 0;
+}
+.enemyBehemoth2 {
+  background-image: url("..//images/behemoth2.png");
+}
+.enemyEnt {
+  right: -100px;
+  width: 216px;
+  height: 215px;
+  background-image: url("..//images/ent1.png");
+  position: absolute;
+  background-position: -1512px 0;
+}
+.enemyEnt2 {
+  background-image: url("..//images/ent2.png");
 }

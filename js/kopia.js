@@ -5,21 +5,24 @@ $(document).ready(function() {
   var enemyPropertiesMummy = {
     class: "enemyMummy",
     class2: "enemyMummy2",
+    destroyClass: "enemyMummy",
     moveStart: -1107,
     moveStep: 123,
     attackStart: -861,
     experience: 10,
-    directionAttack: "406px",
+    directionAttack: "-406px",
     height: 167,
     delay: 2000,
     life: 1,
     randomY: 550,
-    frames: 10
+    frames: 10,
+    strength: 1
   }
 
   var enemyPropertiesBehemoth = {
     class: "enemyBehemoth",
     class2: "enemyBehemoth2",
+    destroyClass: "enemyBehemoth2",
     moveStart: -2430,
     moveStep: 270,
     attackStart: -1620,
@@ -29,7 +32,25 @@ $(document).ready(function() {
     delay: 4000,
     life: 3,
     randomY: 450,
-    frames: 7
+    frames: 7,
+    strength: 3
+  }
+
+  var enemyPropertiesEnt = {
+    class: "enemyEnt",
+    class2: "enemyEnt2",
+    destroyClass: "enemyEnt2",
+    moveStart: -1512,
+    moveStep: 216,
+    attackStart: -1296,
+    experience: 50,
+    directionAttack: "-430px",
+    height: 215,
+    delay: 3000,
+    life: 4,
+    randomY: 450,
+    frames: 7,
+    strength: 2
   }
 
 //Movement system and limit
@@ -102,13 +123,25 @@ $(document).ready(function() {
             {duration: 2000, easing: "linear", complete: function(){
               enemy.pause()
                 .addClass(enemyProperties.class2);
+              if (enemy.attr("data-life") < 1){
+                return false;
+              }
               setTimeout(function(){
                 enemy.removeClass(enemyProperties.class2)
                   .resume()
-                  .animate({left: "-150px", top: randomDirection},
-                    {duration: 12000, easing: "linear", complete: function(){$(this).remove();}});
-              }, 1000);
+                  .animate({left: "-250px", top: randomDirection},
+                    {duration: 13000, easing: "linear", complete: function(){$(this).remove();}});
+              }, 500);
             }})
+        }
+      }
+      else if (enemyType == "ent"){
+        var enemyProperties = enemyPropertiesEnt;
+        function enemyAnimate(enemy, randomDirection){
+          enemy.animate({right: "50px"},
+            {duration: 6000, easing: "linear"})
+            .animate({left: "-150px", top: randomDirection},
+            {duration: 25000, easing: "linear", complete: function(){$(this).remove();}});
         }
       }
 
@@ -134,12 +167,6 @@ $(document).ready(function() {
       var thisX = parseInt(enemy.css("left"));
       var thisY = parseInt(enemy.css("top"));
       var hit = sprite.hasClass("hit");
-
-      //Checking bullet
-      if ($("div.bullet").length){
-        killEnemy($("div.bullet"), enemyProperties, enemy, thisX, thisY);
-      }
-
       enemy.attr("data-interval", interval)
         .css("background-position", (enemyProperties.moveStart+(animationStep*enemyProperties.moveStep))+"px 0");
       animationStep++;
@@ -157,7 +184,7 @@ $(document).ready(function() {
       }
 
       if (thisY <= heroPosY && thisY + height >= heroPosY-100 && conditionX){
-        console.log(dirAtt);
+        hitHero(enemyProperties.strength);
         sprite.addClass("hit");
 
         for (var i = 0; i < 39; i++) {
@@ -219,7 +246,8 @@ $(document).ready(function() {
           .css("top", posY+30)
           .css("left", posX+100);
           container.append(bullet);
-          bullet.animate({left: "1000px"},
+          killEnemy(bullet);
+          bullet.animate({left: "1100px"},
           {duration: 1000, easing: "linear", complete: function(){$(this).remove();}});
           sprite.css("background-position", "0 0")
           .removeClass("spriteShoot");
@@ -227,62 +255,99 @@ $(document).ready(function() {
     });
   }
 
-  function hitEnemy(hit, propertiesObj){
+  function hitHero(power){
+    var actualLifes = ($("#lifes").text())-power;
+    $("#lifes").text(actualLifes);
+  }
+
+  function addExperience(amount){
+    var actualExp = parseInt($("#exp").text());
+    var newExp = actualExp+parseInt(amount);
+    $("#exp").text(newExp);
+  }
+
+  function hitEnemy(hit, typeProperties){
     var iteration = 0;
     hit.pause()
-      .addClass(propertiesObj.class2)
+      .addClass(typeProperties.destroyClass)
     var hitAnimation = setInterval(function(){
+      if (hit.attr("data-life") < 1){
+        return false;
+      }
       iteration++;
-      hit.css("background-position", propertiesObj.attackStart+(iteration*propertiesObj.step)+"px "+(-propertiesObj.height)*4);
-      if (iteration == propertiesObj.frames-1){
+      hit.css("background-position", typeProperties.attackStart+(iteration*typeProperties.moveStep)+"px "+typeProperties.height*(-4)+"px");
+      if (iteration == typeProperties.frames-1){
         clearInterval(hitAnimation);
       }
     }, 80)
-      // .css("background-position", "0 "+ -(parseInt(hit.css("height"))*4)+"px");
 
     setTimeout(function(){
       hit.resume()
-        .removeClass("enemyBehemoth2");
-      intervalBGAnimation(enemyPropertiesBehemoth, hit);
-
+        .removeClass(typeProperties.destroyClass);
+      intervalBGAnimation(typeProperties, hit);
     }, 500)
   }
-  // function killAnimation(toKill){
-  //   var iteration = 0;
-  //   var killAnimation = setInterval(function(){
-  //     iteration++;
-  //     toKill.css("background-position", (-1107+(iteration*123))+"px 167px");
-  //     if (iteration == toKill.attr("data-frames")-1){
-  //       clearInterval(killAnimation);
-  //     }
-  //   }, 50)
-  // }
 
-  function killEnemy(fireball, enemyProperties, enemy, enemyX, enemyY){
-    var fireballPosY = parseInt(fireball.css("top"));
-    var fireballPosX = parseInt(fireball.css("left"));
+  function killAnimation(toKill, typeProperties){
+    var iteration = 0;
+    var killAnimation = setInterval(function(){
+      iteration++;
+      toKill.addClass(typeProperties.destroyClass)
+        .css("background-position", (-typeProperties.moveStep*(typeProperties.frames-1))+(iteration*typeProperties.moveStep)+"px "+typeProperties.height+"px")
 
-    var checkInterval = setInterval(function(){
-      if (fireballPosY >= enemyY && fireballPosY <= enemyY+enemyProperties.height && fireballPosX >= enemyX-60 && fireballPosX <= enemyX+20){
-        clearInterval(checkInterval);
-        fireball.remove();
-        enemy.attr("data-life", parseInt(enemy.attr("data-life")-1));
-        clearInterval($(this).attr("data-interval"));
-        if (enemy.attr("data-life") > 0){
-          hitEnemy(enemy, enemyProperties);
+      if (iteration == typeProperties.frames-1){
+        clearInterval(killAnimation);
+        clearInterval(toKill.attr("data-interval"));
+      }
+    }, 50)
+  }
+
+  function killEnemy(fireball){
+    var intervalCheck = setInterval(function(){
+      var fireballPosY = parseInt(fireball.css("top"));
+      var fireballPosX = parseInt(fireball.css("left"));
+      var enemies = $(".enemy");
+
+      enemies.each(function(){
+        var thisTop = parseInt($(this).css("top"));
+        var thisLeft = parseInt($(this).css("left"));
+        var $this = $(this);
+        var typeProperties = null;
+
+        if ($this.hasClass("enemyMummy")){
+          typeProperties = enemyPropertiesMummy;
+        }
+        else if ($this.hasClass("enemyBehemoth")){
+          typeProperties = enemyPropertiesBehemoth;
+        }
+        else if ($this.hasClass("enemyEnt")){
+          typeProperties = enemyPropertiesEnt;
         }
 
-        else if (enemy.attr("data-life") < 1){
-          enemy.stop()
-            .removeClass("enemy");
-          //killAnimation($this);
-          enemy.stop();
-          return false;
+        if (fireballPosY >= thisTop && fireballPosY <= thisTop+typeProperties.height && fireballPosX >= thisLeft-20 && fireballPosX <= thisLeft+20){
+          clearInterval(intervalCheck);
+          fireball.remove();
+          $this.attr("data-life", parseInt($this.attr("data-life")-1));
+          clearInterval($(this).attr("data-interval"));
+          if ($this.attr("data-life") > 0){
+            hitEnemy($this, typeProperties);
+          }
+
+          else if ($this.attr("data-life") < 1){
+            $this.stop()
+              .removeClass("enemy");
+            killAnimation($this, typeProperties);
+            clearInterval($(this).attr("data-interval"));
+            addExperience($this.attr("data-experience"));
+            $this.stop();
+          }
         }
-      };
-    }, 20)
+      });
+    }, 20);
 
   }
   moveSystem(30, 890, 70, 570);
-  createEnemy(2, "behemoth");
+  //createEnemy(5, "ent");
+  //createEnemy(25, "mummy");
+  createEnemy(5, "behemoth");
 });
