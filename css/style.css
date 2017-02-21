@@ -55,6 +55,20 @@ body {
   background-size: cover;
   position: absolute;
 }
+.enemyMedusaBullet {
+  width: 50px;
+  height: 12px;
+  background-image: url("..//images/medusaBullet.png");
+  position: absolute;
+  z-index: 1;
+}
+.enemyCyclopBullet {
+  width: 50px;
+  height: 50px;
+  background-image: url("..//images/cyclopBullet.png");
+  position: absolute;
+  z-index: 1;
+}
 .enemy {
   z-index: 3;
 }
@@ -92,4 +106,26 @@ body {
 }
 .enemyEnt2 {
   background-image: url("..//images/ent2.png");
+}
+.enemyMedusa {
+  right: -100px;
+  width: 167px;
+  height: 180px;
+  background-image: url("..//images/medusa1.png");
+  position: absolute;
+  background-position: -1512px 0;
+}
+.enemyMedusa2 {
+  background-image: url("..//images/medusa2.png");
+}
+.enemyCyclop {
+  right: -100px;
+  width: 157px;
+  height: 207px;
+  background-image: url("..//images/cyclop.png");
+  position: absolute;
+  background-position: -1512px 0;
+}
+.enemyCyclop2 {
+  background-image: url("..//images/cyclop2.png");
 }
