@@ -1,6 +1,7 @@
 $(document).ready(function() {
   var sprite = $(".sprite");
   var container = $(".container");
+  var difficulty = 1;
   sprite.attr("data-shoot", "fireball");
 
   var enemyPropertiesMummy = {
@@ -169,14 +170,71 @@ $(document).ready(function() {
           defenseMagic("magicShield", 56, 16, 20);
         }
         else if(event.which == 51) {
-          shoot(posY, posX);
+          magicShoot(30);
         }
         else if(event.which == 52) {
           armagedon(50);
         }
       }
     });
+
+    $(".spellCure").on("click", function(){
+      var animate = sprite.is(':animated');
+      var shooter = sprite.hasClass("heroShooter");
+      if (!shooter && !animate){
+        defenseMagic("magicCure", 90, 20, 40);
+      }
+    });
+    $(".spellShield").on("click", function(){
+      var animate = sprite.is(':animated');
+      var shooter = sprite.hasClass("heroShooter");
+      if (!shooter && !animate){
+        defenseMagic("magicShield", 56, 16, 20);
+      }
+    });
+    $(".spellMagicShoot").on("click", function(){
+      var animate = sprite.is(':animated');
+      var shooter = sprite.hasClass("heroShooter");
+      if (!shooter && !animate){
+        magicShoot(30);
+      }
+    });
+    $(".spellArmagedon").on("click", function(){
+      var animate = sprite.is(':animated');
+      var shooter = sprite.hasClass("heroShooter");
+      if (!shooter && !animate){
+        armagedon(50);
+      }
+    });
   };
+
+  function magicShoot(mana){
+    var actualMana = $("#mana").text();
+    var heroX = parseInt(sprite.css("left"));
+    var heroY = parseInt(sprite.css("top"));
+
+    if (actualMana >= mana){
+      var newMana = parseInt(actualMana) - mana;
+      $("#mana").text(newMana);
+      var magicShootDiv = $("<div>")
+        .addClass("magicShoot")
+        .css("left", heroX+60+"px")
+        .css("top", heroY+40+"px");
+      magicShootDiv.animate({left: heroX+1000}, {duration: 2000, easing: "linear", complete: function(){$(this).remove()}})
+      container.append(magicShootDiv);
+
+      var magicIteration = 0;
+      var magicCheckInterval = setInterval(function(){
+        magicIteration++;
+        magicShootDiv.css("background-position", 128*magicIteration+"px 0");
+      })
+      killEnemy(magicShootDiv, "magicShoot");
+      setTimeout(function(){
+        clearInterval(magicCheckInterval);
+      }, 2500);
+    }
+  }
+
   function armagedon(mana){
     var actualMana = $("#mana").text();
     if (actualMana >= mana){
@@ -194,7 +252,7 @@ $(document).ready(function() {
         if (armagedonIteration > 20){
           clearInterval(armagedonInterval);
         }
-      }, 40);
+      }, 60);
     }
   }
 
@@ -244,9 +302,9 @@ $(document).ready(function() {
 
         function enemyAnimate(enemy, randomDirection){
           enemy.animate({right: "50px"},
-            {duration: 3000, easing: "linear"})
+            {duration: 3000*difficulty, easing: "linear"})
             .animate({left: "-150px", top: randomDirection},
-            {duration: 15000, easing: "linear", complete: function(){$(this).remove();}});
+            {duration: 15000*difficulty, easing: "linear", complete: function(){$(this).remove();}});
         }
       }
       else if (enemyType == "behemoth"){
@@ -254,7 +312,7 @@ $(document).ready(function() {
 
         function enemyAnimate(enemy, randomDirection){
           enemy.animate({right: "20px"},
-            {duration: 2000, easing: "linear", complete: function(){
+            {duration: 2000*difficulty, easing: "linear", complete: function(){
               enemy.pause()
                 .addClass(enemyProperties.class2);
               if (enemy.attr("data-life") < 1){
@@ -267,7 +325,7 @@ $(document).ready(function() {
                 enemy.removeClass(enemyProperties.class2)
                   .resume()
                   .animate({left: "-250px", top: randomDirection},
-                    {duration: 13000, easing: "linear", complete: function(){$(this).remove();}});
+                    {duration: 13000*difficulty, easing: "linear", complete: function(){$(this).remove();}});
               }, 500);
             }})
         }
@@ -276,20 +334,20 @@ $(document).ready(function() {
         var enemyProperties = enemyPropertiesEnt;
         function enemyAnimate(enemy, randomDirection){
           enemy.animate({right: "50px"},
-            {duration: 6000, easing: "linear"})
+            {duration: 6000*difficulty, easing: "linear"})
             .animate({left: "-150px", top: randomDirection},
-            {duration: 25000, easing: "linear", complete: function(){$(this).remove();}});
+            {duration: 25000*difficulty, easing: "linear", complete: function(){$(this).remove();}});
         }
       }
       else if (enemyType == "harpy"){
         var enemyProperties = enemyPropertiesHarpy;
         function enemyAnimate(enemy, randomDirection){
           enemy.animate({right: "50px"},
-            {duration: 1000, easing: "linear"})
+            {duration: 1000*difficulty, easing: "linear"})
             .animate({left: sprite.css("left"), top: sprite.css("top")},
-            {duration: 4000, easing: "linear", complete: function(){
+            {duration: 4000*difficulty, easing: "linear", complete: function(){
               enemy.animate({left: 800, top: randomDirection},
-                {duration: 4000, easing: "linear", complete: function(){
+                {duration: 4000*difficulty, easing: "linear", complete: function(){
                   enemyAnimate(enemy, randomDirection);
                 }})
             }});
@@ -299,11 +357,11 @@ $(document).ready(function() {
         var enemyProperties = enemyPropertiesBlackKnight;
         function enemyAnimate(enemy, randomDirection){
           enemy.animate({right: "50px"},
-            {duration: 2000, easing: "linear"})
+            {duration: 2000*difficulty, easing: "linear"})
             .animate({left: sprite.css("left"), top: sprite.css("top")},
-            {duration: 6000, easing: "linear", complete: function(){
+            {duration: 6000*difficulty, easing: "linear", complete: function(){
               enemy.animate({left: 800, top: randomDirection},
-                {duration: 6000, easing: "linear", complete: function(){
+                {duration: 6000*difficulty, easing: "linear", complete: function(){
                   enemyAnimate(enemy, randomDirection);
                 }})
             }});
@@ -314,7 +372,7 @@ $(document).ready(function() {
         function enemyAnimate(enemy, randomDirection){
           enemy.addClass("shooter")
             .animate({right: "20px"},
-            {duration: 2000, easing: "linear", complete: function(){
+            {duration: 2000*difficulty, easing: "linear", complete: function(){
               clearInterval($(this).attr("data-interval"));
               enemyShoot(enemy, enemyProperties, 4);
             }});
@@ -325,7 +383,7 @@ $(document).ready(function() {
         function enemyAnimate(enemy, randomDirection){
           enemy.addClass("shooter")
             .animate({right: "20px"},
-            {duration: 3000, easing: "linear", complete: function(){
+            {duration: 3000*difficulty, easing: "linear", complete: function(){
               clearInterval($(this).attr("data-interval"));
               enemyShoot(enemy, enemyProperties, 20);
             }});
@@ -469,7 +527,7 @@ $(document).ready(function() {
         }
       }, 100)
 
-    }, 2000)
+    }, 2000*difficulty)
   }
 
   function shoot(posY, posX){
@@ -604,6 +662,10 @@ $(document).ready(function() {
       var fireballPosX = parseInt(fireball.css("left"));
       var enemies = $(".enemy");
 
+      if (magic === "magicShoot"){
+        fireball.addClass("bullet");
+      }
+
       enemies.each(function(){
         var thisTop = parseInt($(this).css("top"));
         var thisLeft = parseInt($(this).css("left"));
@@ -631,7 +693,7 @@ $(document).ready(function() {
         else if ($this.hasClass("enemyBlackKnight")){
           typeProperties = enemyPropertiesBlackKnight;
         }
-        if (magic){
+        if (magic == "armagedon"){
           clearInterval(intervalCheck);
           afterHitEnemy($this, typeProperties, 4);
         }
@@ -665,6 +727,10 @@ $(document).ready(function() {
         else if (fireball.hasClass("bullet") && fireballPosY+40 >= thisTop+30 && fireballPosY <= thisTop+typeProperties.height-30 && fireballPosX >= thisLeft-20 && fireballPosX <= thisLeft+20){
           clearInterval(intervalCheck);
           fireball.remove();
+          if (magic === "magicShoot"){
+            afterHitEnemy($this, typeProperties, 4);
+            return true;
+          }
           afterHitEnemy($this, typeProperties, 1);
         }
       });
@@ -690,9 +756,94 @@ $(document).ready(function() {
     }
   }
 
-  moveSystem(30, 890, 70, 570);
-  //createEnemy(15, "ent");
-  //createEnemy(5, "mummy");
-  createEnemy(5, "blackKnight");
-  //createEnemy(5, "medusa");
+  function gameOver(){
+    $(".container").children().remove();
+  }
+
+  function startGame(){
+    moveSystem(30, 890, 70, 570);
+    //createEnemy(15, "ent");
+    //createEnemy(5, "mummy");
+    createEnemy(5, "blackKnight");
+    //createEnemy(5, "medusa");
+  }
+  function main(){
+    var menuContainer = $(".menu");
+    var startBtn = $("#start");
+    var optionsBtn = $("#options");
+    var scoreBtn = $("#score");
+    var gameContainer = $(".container");
+    var gamePanel = $(".panel");
+    var backBtn = $(".back");
+    var menuText = $("#menuText");
+    var scorePanel = $(".scoreScreen");
+    var easyBtn = $("#easy");
+    var mediumBtn = $("#medium");
+    var hardBtn = $("#hard");
+    var sound = $("#sound");
+    var optionsContainer = $(".optionsScreen");
+    var instructionsBtn = $("#instructions");
+    var instructionsContainer = $(".instructionsScreen");
+
+    startBtn.on("click", function(){
+      menuContainer.addClass("hide");
+      gameContainer.addClass("show");
+      gamePanel.addClass("show");
+      startGame();
+    })
+    optionsBtn.on("click", function(){
+      menuText.removeClass("show");
+      menuText.addClass("hide");
+      backBtn.addClass("show");
+      optionsContainer.addClass("show");
+    })
+    instructionsBtn.on("click", function(){
+      menuText.removeClass("show");
+      menuText.addClass("hide");
+      backBtn.addClass("show");
+      instructionsContainer.addClass("show");
+    })
+    scoreBtn.on("click", function(){
+      menuText.removeClass("show");
+      menuText.addClass("hide");
+      scorePanel.addClass("show");
+      backBtn.addClass("show");
+    })
+    easyBtn.on("click", function(){
+      difficulty = 1.5;
+      easyBtn.addClass("selected");
+      mediumBtn.removeClass("selected");
+      hardBtn.removeClass("selected");
+    })
+    mediumBtn.on("click", function(){
+      difficulty = 1;
+      mediumBtn.addClass("selected");
+      easyBtn.removeClass("selected");
+      hardBtn.removeClass("selected");
+    })
+    hardBtn.on("click", function(){
+      difficulty = 0.7;
+      hardBtn.addClass("selected");
+      easyBtn.removeClass("selected");
+      mediumBtn.removeClass("selected");
+    })
+    sound.on("click", function(){
+      if (sound.text()=="Sound ON"){
+        sound.text("Sound OFF");
+      }
+      else if (sound.text()=="Sound OFF"){
+        sound.text("Sound ON");
+      }
+    })
+    backBtn.on("click", function(){
+      scorePanel.removeClass("show");
+      menuText.addClass("show");
+      backBtn.removeClass("show");
+      optionsContainer.removeClass("show");
+      instructionsContainer.removeClass("show");
+    })
+  }
+
+  main();
+
 });

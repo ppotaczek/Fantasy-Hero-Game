@@ -8,6 +8,83 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <div class="menu">
+    <div id="menuText">
+      <p id="start" class="menuText">Start Game</p>
+      <p id="options" class="menuText">Options</p>
+      <p id="instructions" class="menuText">Instructions</p>
+      <p id="score" class="menuText">High Score</p>
+    </div>
+    <div class="scoreScreen">
+      <p class="menuText">Coming soon</p>
+    </div>
+
+    <div class="instructionsScreen">
+      <p class="menuText">Spells</p>
+      <div class="spellsInstructions">
+        <div class="instruction spellCure"></div>
+        <div class="instruction spellShield"></div>
+        <div class="instruction spellMagicShoot"></div>
+        <div class="instruction spellArmagedon"></div>
+      </div>
+      <div class="spellsInstructions">
+        <p class="instructionText">Cure - Hero has 25 lifes again!</p>
+        <p class="instructionText">Shield - Enemies do not attack for 20sec</p>
+        <p class="instructionText">Magic Shoot - Special bullet</p>
+        <p class="instructionText">Armagedon - Kill almost all enemies!</p>
+      </div>
+      <p class="menuText">Bullets</p>
+      <div class="bulletImages">
+        <p class="instructionText bulletImages">Standard:</p>
+        <div class="fireballImage"></div>
+        <p class="instructionText bulletImages">More than 1000 Exp:</p>
+        <div class="explosionImage"></div>
+        <p class="instructionText bulletImages">More than 4000 Exp:</p>
+        <div class="thorImage"></div>
+      </div>
+    </div>
+
+    <div class="optionsScreen">
+      <p id="difficulty" class="menuText">Difficulty</p>
+      <div class="difficultyLevel">
+        <p class="difficulty" id="easy">Easy</p>
+        <p class="difficulty selected" id="medium">Medium</p>
+        <p class="difficulty" id="hard">Hard</p>
+      </div>
+      <p id="control" class="menuText">Control</p>
+      <div class="controlContainer">
+        <div class="controlPanel">
+            <p class="control">A</p>
+            <p class="control">S</p>
+            <p class="control">D</p>
+            <p class="control">W</p>
+            <p class="control space">SPACE</p>
+        </div>
+        <div class="controlPanel">
+          <p class="controlDescription">MOVE UP</p>
+          <p class="controlDescription">MOVE DOWN</p>
+          <p class="controlDescription">MOVE RIGHT</p>
+          <p class="controlDescription">MOVE LEFT</p>
+          <p class="controlDescription">SHOOT</p>
+        </div>
+        <div class="controlPanel">
+          <p class="control">1</p>
+          <p class="control">2</p>
+          <p class="control">3</p>
+          <p class="control">4</p>
+        </div>
+        <div class="controlPanel">
+          <p class="controlDescription">SPELL: CURE</p>
+          <p class="controlDescription">SPELL: SHIELD</p>
+          <p class="controlDescription">SPELL: MAGIC SHOOT</p>
+          <p class="controlDescription">SPELL: ARMAGEDON</p>
+        </div>
+        <p id="sound" class="menuText">Sound ON</p>
+      </div>
+    </div>
+    <p class="back menuText">Back</p>
+  </div>
+
   <div class="container">
     <div class="sprite"></div>
   </div>
@@ -21,6 +98,12 @@
     <p class="panelElem">
       Mana: <span id="mana">100</span>
     </p>
+    <div class="spells">
+      <div class= "spell spellCure"></div>
+      <div class= "spell spellShield"></div>
+      <div class= "spell spellMagicShoot"></div>
+      <div class= "spell spellArmagedon"></div>
+    </div>
   </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="js/pause_plugin.js" type="text/javascript"></script>

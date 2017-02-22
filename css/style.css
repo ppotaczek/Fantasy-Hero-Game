@@ -4,21 +4,181 @@
   overflow: hidden;
 }
 body {
-  background-image: url("..//images/body.jpg");
+  background-image: url("..//images/menu/body.jpg");
   background-size: cover;
   height: 100vh;
 }
+.spells {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.spell {
+  width: 53px;
+  height: 52px;
+  background-image: url("..//images/menu/spells.png");
+  display: inline-block;
+}
+.spellShield{
+  background-position: -53px 0;
+}
+.spellMagicShoot{
+  background-position: -106px 0;
+}
+.spellArmagedon{
+  background-position: -159px 0;
+}
+.instructionsScreen {
+  display: none;
+  text-align: center;
+}
+.instruction {
+  background-image: url("..//images/menu/spells.png");
+  width: 53px;
+  height: 52px;
+  margin-top: 10px;
+}
+.instructionText {
+  text-align: left;
+  padding: 10px;
+  margin: 20px 90px 12px 10px;
+  color: white;
+  font-family: sans-serif;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.spellsInstructions{
+  display: inline-block;
+  margin: 30px 0;
+}
+.bulletImages {
+  display: inline-block;
+  margin: 10px 20px;
+}
+.fireballImage {
+  display: inline-block;
+  height: 43px;
+  width: 75px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url("..//images/fireball.png");
+}
+.explosionImage {
+  display: inline-block;
+  height: 64px;
+  width: 64px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url("..//images/firebullet.png");
+}
+.thorImage {
+  display: inline-block;
+  height: 54px;
+  width: 164px;
+  background-size: cover;
+  background-image: url("..//images/thor2.png");
+}
+
+.menu {
+  position: relative;
+  width: 1000px;
+  height: 750px;
+  margin: 0 auto;
+  border: 2px solid black;
+  margin-top: 20px;
+  z-index: 1002;
+  background-image: url("..//images/menu/menu_bg.jpg");
+}
+#menuText {
+  font-family: 'Amatic SC', cursive;
+  position: absolute;
+  right: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.menuText {
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.4);
+  margin-top: 20px;
+  text-align: center;
+  font-family: 'Amatic SC', cursive;
+  font-size: 50px;
+  color: #eeeeee;
+  padding: 1px 60px;
+}
+.back {
+  position: absolute;
+  width: 300px;
+  right: 10%;
+  top: 80%;
+  display: none;
+  cursor: pointer;
+}
+.scoreScreen {
+  width: 100%;
+  position: absolute;
+  top: 40%;
+  display: none;
+}
+.difficultyLevel {
+  text-align: center;
+}
+.difficulty {
+  cursor: pointer;
+  margin: 20px;
+  text-align: center;
+  display: inline-block;
+  color: white;
+  font-family: 'Amatic SC', cursive;
+  font-size: 40px;
+  background-color: rgba(0, 0, 0, 0.4);
+  width: 150px;
+  padding: 5px 0;
+}
+.controlPanel {
+  display: inline-block;
+  height: 210px;
+  position: relative;
+}
+.control {
+  text-align: center;
+  margin: 10px auto;
+  width: 30px;
+  color: white;
+  font-family: sans-serif;
+  border: 2px solid white;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.controlContainer {
+  margin-top: 20px;
+  text-align: center;
+}
+.space {
+  width: 100px;
+}
+.controlDescription {
+  text-align: left;
+  padding: 5px;
+  margin: 14px 90px 12px 10px;
+  color: white;
+  font-family: sans-serif;
+  background-color: rgba(0, 0, 0, 0.2);
+}
 .container {
+  display: none;
   position: relative;
   width: 1000px;
   height: 700px;
   margin: 0 auto;
   margin-top: 20px;
-  border: 2px solid gray;
+  border: 1px solid black;
   background-image: url("..//images/Battleback_snow2.png");
   background-size: cover;
 }
 .panel {
+  display: none;
   position: relative;
   margin: 0 auto;
   width: 1000px;
@@ -41,8 +201,11 @@ body {
   top: 400px;
   z-index: 1000;
 }
-.hit {
-
+#sound {
+  cursor: pointer;
+}
+.optionsScreen{
+  display: none;
 }
 .spriteShoot {
   background-image: url("..//images/sprite3.png");
@@ -87,6 +250,15 @@ body {
   transform: translateY(-50%);
   z-index: 1000;
 }
+.magicShoot {
+  width: 128px;
+  height: 33px;
+  background-image: url("..//images/magic/magic_shoot.png");
+  background-size: cover;
+  position: absolute;
+  z-index: 1000;
+  transform: translateX(-30%);
+}
 .magicShield {
   width: 56px;
   height: 73px;
@@ -111,6 +283,7 @@ body {
   height: 100%;
   position: absolute;
   z-index: 1001;
+  background-size: auto;
 }
 .enemyMedusaBullet {
   width: 50px;
@@ -207,4 +380,13 @@ body {
 }
 .enemyCyclop2 {
   background-image: url("..//images/cyclop2.png");
+}
+.selected {
+  color: red;
+}
+.hide {
+  display: none;
+}
+.show {
+  display: block;
 }
