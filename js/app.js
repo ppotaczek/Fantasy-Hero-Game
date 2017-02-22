@@ -1,6 +1,7 @@
 $(document).ready(function() {
   var sprite = $(".sprite");
   var container = $(".container");
+  sprite.attr("data-shoot", "fireball");
 
   var enemyPropertiesMummy = {
     class: "enemyMummy",
@@ -52,6 +53,38 @@ $(document).ready(function() {
     frames: 7,
     strength: 2
   }
+  var enemyPropertiesHarpy = {
+    class: "enemyHarpy",
+    class2: "enemyHarpy2",
+    destroyClass: "enemyHarpy2",
+    moveStart: -696,
+    moveStep: 174,
+    attackStart: -1218,
+    experience: 30,
+    directionAttack: "-338px",
+    height: 169,
+    delay: 2000,
+    life: 2,
+    randomY: 490,
+    frames: 7,
+    strength: 2
+  }
+  var enemyPropertiesBlackKnight = {
+    class: "enemyBlackKnight",
+    class2: "enemyBlackKnight2",
+    destroyClass: "enemyBlackKnight2",
+    moveStart: -2268,
+    moveStep: 189,
+    attackStart: -1134,
+    experience: 150,
+    directionAttack: "-378px",
+    height: 189,
+    delay: 5000,
+    life: 5,
+    randomY: 470,
+    frames: 6,
+    strength: 4
+  }
   var enemyPropertiesMedusa = {
     class: "enemyMedusa",
     class2: "enemyMedusa2",
@@ -67,7 +100,8 @@ $(document).ready(function() {
     randomY: 520,
     frames: 6,
     strength: 2,
-    classBullet: "enemyMedusaBullet"
+    classBullet: "enemyMedusaBullet",
+    shootY: 70
   }
   var enemyPropertiesCyclop = {
     class: "enemyCyclop",
@@ -84,7 +118,8 @@ $(document).ready(function() {
     randomY: 500,
     frames: 7,
     strength: 4,
-    classBullet: "enemyCyclopBullet"
+    classBullet: "enemyCyclopBullet",
+    shootY: 90
   }
 
 //Movement system and limit
@@ -93,6 +128,7 @@ $(document).ready(function() {
       var posX = parseInt(sprite.css("left"));
       var posY = parseInt(sprite.css("top"));
       var animate = sprite.is(':animated');
+      var shooter = sprite.hasClass("heroShooter");
 
       function spriteAnimateProperties(displacement){
         return {duration: 120, complete: function(){sprite.css("background-position", displacement);}}
@@ -108,33 +144,97 @@ $(document).ready(function() {
         sprite.animate({top: value}, spriteAnimateProperties("0 0"));
       }
 
-      if(event.which == 97 && !animate) {
-        if (posX >= minPosX){
-            spriteAnimateLeft("-=20px");
+      if (!shooter && !animate){
+        if(event.which == 97 && posX >= minPosX) {
+          spriteAnimateLeft("-=20px");
         }
-      }
-      else if(event.which == 100 && !animate) {
-        if (posX <= maxPosX){
-            spriteAnimateLeft("+=20px");
+        else if(event.which == 100 && posX <= maxPosX) {
+          spriteAnimateLeft("+=20px");
         }
-      }
-      else if(event.which == 119 && !animate) {
-        if (posY >= minPosY){
+        else if(event.which == 119 && posY >= minPosY) {
           spriteAnimateTop("-=20px");
         }
-      }
-      else if(event.which == 115 && !animate) {
-        if (posY <= maxPosY){
+        else if(event.which == 115 && posY <= maxPosY) {
           spriteAnimateTop("+=20px");
         }
-      }
-      //Shooting
-      else if(event.which == 32 && !animate) {
-        shoot(posY, posX);
-
+        //Shooting
+        else if(event.which == 32) {
+          shoot(posY, posX);
+        }
+        //Magic
+        else if(event.which == 49) {
+          defenseMagic("magicCure", 90, 20, 40);
+        }
+        else if(event.which == 50) {
+          defenseMagic("magicShield", 56, 16, 20);
+        }
+        else if(event.which == 51) {
+          shoot(posY, posX);
+        }
+        else if(event.which == 52) {
+          armagedon(50);
+        }
       }
     });
   };
+  function armagedon(mana){
+    var actualMana = $("#mana").text();
+    if (actualMana >= mana){
+      var newMana = parseInt(actualMana) - mana;
+      $("#mana").text(newMana);
+      var armagedonDiv = $("<div>")
+        .addClass("armagedon");
+      container.append(armagedonDiv);
+      killEnemy(armagedonDiv, "armagedon");
+
+      var armagedonIteration = 1;
+      var armagedonInterval = setInterval(function(){
+        armagedonIteration++;
+        armagedonDiv.css("background-image", "url(./images/magic/C06spF"+armagedonIteration+".png)");
+        if (armagedonIteration > 20){
+          clearInterval(armagedonInterval);
+        }
+      }, 40);
+    }
+  }
+
+  function defenseMagic(spellClass, step, frames, mana){
+    var actualMana = $("#mana").text();
+
+    if (actualMana >= mana){
+      var heroX = parseInt(sprite.css("left"));
+      var heroY = parseInt(sprite.css("top"));
+      var newMana = parseInt(actualMana) - mana;
+      $("#mana").text(newMana);
+
+      var magicDiv = $("<div>")
+      .addClass(spellClass)
+      .css("left", heroX+"px")
+      .css("top", heroY+"px");
+      container.append(magicDiv);
+
+      if (spellClass=="magicCure"){
+        $("#lifes").text("25");
+      }
+      else if (spellClass = "magicShield"){
+        sprite.addClass("hit");
+        setTimeout(function(){
+          sprite.removeClass("hit");
+        }, 10000)
+      }
+
+      var magicIteration = 0;
+      var magicInterval = setInterval(function(){
+        magicIteration++;
+        magicDiv.css("background-position", magicIteration*step + "px 0");
+
+        if (magicIteration > frames){
+          clearInterval(magicInterval);
+          magicDiv.remove();
+        }
+      }, 80)
+    }
+  }
 
   function createEnemy(number, enemyType){
     for (var i = 0; i < number; i++){
@@ -179,6 +279,34 @@ $(document).ready(function() {
             {duration: 6000, easing: "linear"})
             .animate({left: "-150px", top: randomDirection},
             {duration: 25000, easing: "linear", complete: function(){$(this).remove();}});
+        }
+      }
+      else if (enemyType == "harpy"){
+        var enemyProperties = enemyPropertiesHarpy;
+        function enemyAnimate(enemy, randomDirection){
+          enemy.animate({right: "50px"},
+            {duration: 1000, easing: "linear"})
+            .animate({left: sprite.css("left"), top: sprite.css("top")},
+            {duration: 4000, easing: "linear", complete: function(){
+              enemy.animate({left: 800, top: randomDirection},
+                {duration: 4000, easing: "linear", complete: function(){
+                  enemyAnimate(enemy, randomDirection);
+                }})
+            }});
+        }
+      }
+      else if (enemyType == "blackKnight"){
+        var enemyProperties = enemyPropertiesBlackKnight;
+        function enemyAnimate(enemy, randomDirection){
+          enemy.animate({right: "50px"},
+            {duration: 2000, easing: "linear"})
+            .animate({left: sprite.css("left"), top: sprite.css("top")},
+            {duration: 6000, easing: "linear", complete: function(){
+              enemy.animate({left: 800, top: randomDirection},
+                {duration: 6000, easing: "linear", complete: function(){
+                  enemyAnimate(enemy, randomDirection);
+                }})
+            }});
         }
       }
       else if (enemyType == "medusa"){
@@ -274,9 +402,11 @@ $(document).ready(function() {
 
   function addEnemy(enemy, propertiesObj){
     container.append(enemy);
+    var zIndex = parseInt(enemy.css("top"));
     enemy.attr("data-experience", propertiesObj.experience)
       .attr("data-life", propertiesObj.life)
       .addClass("enemy")
+      .css("z-index", zIndex);
   }
 
   function enemyShoot(enemy, propertiesObj, number){
@@ -294,6 +424,7 @@ $(document).ready(function() {
         enemy.addClass(propertiesObj.class2);
         animateIteration++;
         enemy.css("background-position", (propertiesObj.moveStart+(animateIteration*propertiesObj.moveStep))+"px 0");
+
         if (animateIteration > propertiesObj.frames){
           clearInterval(enemyShootAnimation);
           var heroX = parseInt(sprite.css("left"));
@@ -301,7 +432,7 @@ $(document).ready(function() {
           var enemyBullet = $("<div>")
           .addClass("enemyBullet")
           .addClass(propertiesObj.classBullet)
-          .css("top", enPosY+70)
+          .css("top", enPosY+propertiesObj.shootY)
           .css("left", enPosX);
           container.append(enemyBullet);
           enemyBullet.animate({left: heroX-10, top: heroY+30},
@@ -335,40 +466,75 @@ $(document).ready(function() {
               .removeClass("shooter");
             intervalBGAnimation(propertiesObj, enemy);
           }
-        }}, 100)
+        }
+      }, 100)
 
     }, 2000)
   }
 
   function shoot(posY, posX){
-    sprite.animate({top: "+=0"},
-    {duration: 200, complete:
-    function(){
-      sprite.css("background-position", "0 0")
+    var heroShootIterate = 0;
+    sprite.addClass("heroShooter");
+
+    var heroShootInterval = setInterval(function(){
+      sprite.css("background-position", -153 * heroShootIterate + "px" + " 0")
       .addClass("spriteShoot");
+      if(sprite.attr("data-shoot") == "thor"){
+        sprite.addClass("spriteThor");
       }
-    })
-      .animate({top: "+=0"},
-      {duration: 200, complete:
-      function(){
-        sprite.css("background-position", "-153px 0");
+      else if(sprite.attr("data-shoot") == "fireballExplosion"){
+        sprite.addClass("spriteShootExplosion");
+      }
+      heroShootIterate++;
+
+      if (heroShootIterate > 2){
+        clearInterval(heroShootInterval);
+        sprite.removeClass("heroShooter");
+        var bullet = $("<div>");
+        container.append(bullet);
+        killEnemy(bullet);
+        sprite.css("background-position", "0 0")
+          .removeClass("spriteShoot")
+          .removeClass("spriteThor")
+          .removeClass("spriteShootExplosion");
+
+        if (sprite.attr("data-shoot") == "fireball"){
+          bullet.addClass("bullet")
+            .css("top", posY+30)
+            .css("left", posX+100);
+            bullet.animate({left: posX+1000},
+            {duration: 1000, easing: "linear", complete: function(){$(this).remove();}});
         }
-      })
-      .animate({top: "+=0"},
-        {duration: 200, complete:
-        function(){
-          var bullet = $("<div>")
-          .addClass("bullet")
-          .css("top", posY+30)
-          .css("left", posX+100);
-          container.append(bullet);
-          killEnemy(bullet);
-          bullet.animate({left: posX+1000},
-          {duration: 1000, easing: "linear", complete: function(){$(this).remove();}});
-          sprite.css("background-position", "0 0")
-          .removeClass("spriteShoot");
+
+        else if (sprite.attr("data-shoot") == "fireballExplosion"){
+          bullet.addClass("explosionBullet")
+            .css("top", posY+20)
+            .css("left", posX+100);
+            bullet.animate({left: posX+1000},
+            {duration: 1000, easing: "linear", complete: function(){
+              if (!$(this).hasClass("explosion")){
+                $(this).remove();
+              }
+            }
+          });
         }
-    });
+
+        else if (sprite.attr("data-shoot") == "thor"){
+          bullet.addClass("thunderclap")
+            .css("top", posY-5)
+            .css("left", posX+50);
+            var thorIteration = 0;
+            var thorInterval = setInterval(function(){
+              thorIteration++;
+              bullet.css("background-position", "0 "+thorIteration*101+"px");
+              if(thorIteration > 3){
+                clearInterval(thorInterval);
+                bullet.remove();
+              }
+            }, 100)
+        }
+      }
+    }, 200);
   }
 
   function hitHero(power){
@@ -389,6 +555,12 @@ $(document).ready(function() {
     var newMana = actualMana+2;
     $("#exp").text(newExp);
     $("#mana").text(newMana);
+    if (actualExp > 10){
+      sprite.attr("data-shoot", "fireballExplosion");
+    }
+    else if (actualExp > 200){
+      sprite.attr("data-shoot", "thor");
+    }
   }
 
   function hitEnemy(hit, typeProperties){
@@ -403,13 +575,13 @@ $(document).ready(function() {
       hit.css("background-position", typeProperties.attackStart+(iteration*typeProperties.moveStep)+"px "+typeProperties.height*(-4)+"px");
       if (iteration == typeProperties.frames-1){
         clearInterval(hitAnimation);
+
       }
     }, 80)
-
     setTimeout(function(){
       hit.resume()
         .removeClass(typeProperties.destroyClass);
-      intervalBGAnimation(typeProperties, hit);
+
     }, 500)
   }
 
@@ -419,15 +591,14 @@ $(document).ready(function() {
       iteration++;
       toKill.addClass(typeProperties.destroyClass)
         .css("background-position", (-typeProperties.moveStep*(typeProperties.frames-1))+(iteration*typeProperties.moveStep)+"px "+typeProperties.height+"px")
-
+      clearInterval(toKill.attr("data-interval"));
       if (iteration == typeProperties.frames-1){
         clearInterval(killAnimation);
-        clearInterval(toKill.attr("data-interval"));
       }
     }, 50)
   }
 
-  function killEnemy(fireball){
+  function killEnemy(fireball, magic){
     var intervalCheck = setInterval(function(){
       var fireballPosY = parseInt(fireball.css("top"));
       var fireballPosX = parseInt(fireball.css("left"));
@@ -454,32 +625,74 @@ $(document).ready(function() {
         else if ($this.hasClass("enemyCyclop")){
           typeProperties = enemyPropertiesCyclop;
         }
+        else if ($this.hasClass("enemyHarpy")){
+          typeProperties = enemyPropertiesHarpy;
+        }
+        else if ($this.hasClass("enemyBlackKnight")){
+          typeProperties = enemyPropertiesBlackKnight;
+        }
+        if (magic){
+          clearInterval(intervalCheck);
+          afterHitEnemy($this, typeProperties, 4);
+        }
+        else if (fireball.hasClass("thunderclap") && fireballPosY+40 >= thisTop+30 && fireballPosY <= thisTop+typeProperties.height-30){
+          clearInterval(intervalCheck);
+          afterHitEnemy($this, typeProperties, 1);
+        }
 
-        if (fireballPosY+40 >= thisTop+30 && fireballPosY <= thisTop+typeProperties.height-30 && fireballPosX >= thisLeft-20 && fireballPosX <= thisLeft+20){
+        else if (fireball.hasClass("explosionBullet") && fireballPosY+40 >= thisTop+30 && fireballPosY <= thisTop+typeProperties.height-30 && fireballPosX >= thisLeft-20 && fireballPosX <= thisLeft+20){
+          clearInterval(intervalCheck);
+          enemies.each(function(){
+            var thisTopAfter = parseInt($(this).css("top"));
+            var thisLeftAfter = parseInt($(this).css("left"));
+
+            if(fireballPosY+100 >= thisTopAfter+30 && fireballPosY-100 <= thisTopAfter+typeProperties.height-30 && fireballPosX >= thisLeftAfter-130 && fireballPosX <= thisLeftAfter+130){
+              afterHitEnemy($(this), typeProperties, 1);
+            }
+          })
+          fireball.stop();
+          var explosionIteration = 0;
+          var explosionInterval = setInterval(function(){
+            explosionIteration++;
+            fireball.addClass("explosion")
+              .css("background-position", -2769+explosionIteration*213+"px 0");
+              if (explosionIteration > 13){
+                fireball.remove();
+              }
+          }, 60)
+        }
+
+        else if (fireball.hasClass("bullet") && fireballPosY+40 >= thisTop+30 && fireballPosY <= thisTop+typeProperties.height-30 && fireballPosX >= thisLeft-20 && fireballPosX <= thisLeft+20){
           clearInterval(intervalCheck);
           fireball.remove();
-          $this.attr("data-life", parseInt($this.attr("data-life")-1));
-          clearInterval($(this).attr("data-interval"));
-          if ($this.attr("data-life") > 0){
-            hitEnemy($this, typeProperties);
-          }
-
-          else if ($this.attr("data-life") < 1){
-            $this.stop()
-              .removeClass("enemy");
-            killAnimation($this, typeProperties);
-            clearInterval($(this).attr("data-interval"));
-            addExperience($this.attr("data-experience"));
-            $this.stop();
-          }
+          afterHitEnemy($this, typeProperties, 1);
         }
       });
     }, 20);
-
   }
+
+  function afterHitEnemy($this, typeProperties, number){
+    $this.attr("data-life", parseInt($this.attr("data-life")-number));
+    clearInterval($(this).attr("data-interval"));
+
+    if ($this.attr("data-life") > 0){
+      hitEnemy($this, typeProperties);
+    }
+    else if ($this.attr("data-life") < 1){
+      clearInterval($(this).attr("data-interval"));
+      $this.stop()
+        .removeClass("enemy")
+        .css("z-index", 1);
+      killAnimation($this, typeProperties);
+      clearInterval($(this).attr("data-interval"));
+      addExperience($this.attr("data-experience"));
+      $this.stop();
+    }
+  }
+
   moveSystem(30, 890, 70, 570);
-  //createEnemy(5, "ent");
-  //createEnemy(25, "mummy");
-  createEnemy(5, "cyclop");
-  createEnemy(5, "medusa");
+  //createEnemy(15, "ent");
+  //createEnemy(5, "mummy");
+  createEnemy(5, "blackKnight");
+  //createEnemy(5, "medusa");
 });

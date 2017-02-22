@@ -39,7 +39,7 @@ body {
   background-repeat: no-repeat;
   position: absolute;
   top: 400px;
-  z-index: 1;
+  z-index: 1000;
 }
 .hit {
 
@@ -48,26 +48,83 @@ body {
   background-image: url("..//images/sprite3.png");
   width: 155px;
 }
+.spriteShootExplosion {
+  background-image: url("..//images/sprite5.png");
+  width: 155px;
+}
+.spriteThor {
+  background-image: url("..//images/sprite4.png");
+  width: 155px;
+}
 .bullet {
   width: 60px;
   height: 40px;
   background-image: url("..//images/fireball.png");
   background-size: cover;
   position: absolute;
+  z-index: 1000;
+}
+.thunderclap {
+  width: 948px;
+  height: 101px;
+  background-image: url("..//images/thor.png");
+  position: absolute;
+  z-index: 1000;
+}
+.explosionBullet {
+  width: 58px;
+  height: 64px;
+  background-image: url("..//images/firebullet.png");
+  position: absolute;
+  z-index: 1000;
+}
+.explosion {
+  width: 213px;
+  height: 233px;
+  position: absolute;
+  background-image: url("..//images/explosion.png");
+  background-position: -2769px 0;
+  transform: translateY(-50%);
+  z-index: 1000;
+}
+.magicShield {
+  width: 56px;
+  height: 73px;
+  position: absolute;
+  background-image: url("..//images/magic/shield-magic.png");
+  background-position: -2769px 0;
+  transform: translateY(30%);
+  z-index: 1000;
+}
+.magicCure {
+  width: 90px;
+  height: 94px;
+  position: absolute;
+  background-image: url("..//images/magic/cure.png");
+  background-position: -2769px 0;
+  transform: translateY(-50%);
+  z-index: 1000;
+  transform: translateX(-20%);
+}
+.armagedon {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1001;
 }
 .enemyMedusaBullet {
   width: 50px;
   height: 12px;
   background-image: url("..//images/medusaBullet.png");
   position: absolute;
-  z-index: 1;
+  z-index: 1000;
 }
 .enemyCyclopBullet {
   width: 50px;
   height: 50px;
   background-image: url("..//images/cyclopBullet.png");
   position: absolute;
-  z-index: 1;
+  z-index: 1000;
 }
 .enemy {
   z-index: 3;
@@ -106,6 +163,28 @@ body {
 }
 .enemyEnt2 {
   background-image: url("..//images/ent2.png");
+}
+.enemyHarpy {
+  right: -100px;
+  width: 174px;
+  height: 169px;
+  background-image: url("..//images/harpy.png");
+  position: absolute;
+  background-position: -696px 0;
+}
+.enemyHarpy2 {
+  background-image: url("..//images/harpy2.png");
+}
+.enemyBlackKnight {
+  right: -100px;
+  width: 189px;
+  height: 187px;
+  background-image: url("..//images/black_knight.png");
+  position: absolute;
+  background-position: -2268px 0;
+}
+.enemyBlackKnight2 {
+  background-image: url("..//images/black_knight2.png");
 }
 .enemyMedusa {
   right: -100px;
