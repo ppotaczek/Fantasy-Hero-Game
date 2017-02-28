@@ -1,10 +1,16 @@
 $(document).ready(function() {
+  var config = {
+    apiKey: "AIzaSyBsczmxTd20B4jRh7_-ywlbZCaFUEmQiUE",
+    databaseURL: "https://fantasy-hero.firebaseio.com",
+  };
+  var app = firebase.initializeApp(config);
   var container = $(".container");
   var sprite = container.find(".sprite");
   var difficulty = 1;
   var maxLifes = 25;
   var mana = $("#mana");
   var lifes = $("#lifes");
+  var scores = null;
 
   var enemyPropertiesMummy = {
     class: "enemyMummy",
@@ -56,6 +62,7 @@ $(document).ready(function() {
     frames: 7,
     strength: 2
   }
+
   var enemyPropertiesHarpy = {
     class: "enemyHarpy",
     class2: "enemyHarpy2",
@@ -72,6 +79,7 @@ $(document).ready(function() {
     frames: 7,
     strength: 2
   }
+
   var enemyPropertiesBlackKnight = {
     class: "enemyBlackKnight",
     class2: "enemyBlackKnight2",
@@ -88,6 +96,7 @@ $(document).ready(function() {
     frames: 6,
     strength: 4
   }
+
   var enemyPropertiesMedusa = {
     class: "enemyMedusa",
     class2: "enemyMedusa2",
@@ -106,6 +115,7 @@ $(document).ready(function() {
     classBullet: "enemyMedusaBullet",
     shootY: 70
   }
+
   var enemyPropertiesCyclop = {
     class: "enemyCyclop",
     class2: "enemyCyclop2",
@@ -396,7 +406,6 @@ $(document).ready(function() {
         addEnemy(enemy, enemyProperties);
         intervalBGAnimation(enemyProperties, enemy);
         enemyAnimate(enemy, randomDirection);
-
       }, enemyProperties.delay*k);
     }
   }
@@ -509,7 +518,6 @@ $(document).ready(function() {
               clearInterval(checkHeroHit);
               enemyBullet.remove();
               hitHero(propertiesObj.strength);
-
             }
           }, 20);
 
@@ -618,18 +626,16 @@ $(document).ready(function() {
 
   function addExperience(amount){
     var experience = $("#exp");
-
     var actualExp = parseInt(experience.text());
     var newExp = actualExp+parseInt(amount);
-
     var actualMana = parseInt(mana.text());
     var newMana = actualMana+2;
     experience.text(newExp);
     mana.text(newMana);
-    if (newExp > 10){
+    if (newExp > 4000){
       sprite.attr("data-shoot", "thor");
     }
-    else if (newExp > 4000){
+    else if (newExp > 2000){
       sprite.attr("data-shoot", "fireballExplosion");
     }
   }
@@ -673,7 +679,7 @@ $(document).ready(function() {
       setTimeout(function(){
         $this.stop()
           .addClass(typeProperties.destroyClass);
-      }, 80)
+      }, 120)
     }
   }
 
@@ -783,9 +789,11 @@ $(document).ready(function() {
             fireball.remove();
             if (magic === "magicShoot"){
               afterHitEnemy($this, typeProperties, 4);
+              return false;
             }
             else if (fireball.hasClass("bullet")){
               afterHitEnemy($this, typeProperties, 1);
+              return false;
             }
           }
         }
@@ -822,14 +830,12 @@ $(document).ready(function() {
   function gameOver(){
     var menuSong = $("audio")[1];
     menuSong.play();
-    for (var i = 0; i < 999; i++){
+    for (var i = 0; i < 9999; i++){
       clearInterval(i);
     }
-    container.children().each(function(){
-      stop(true, false);
-    })
-
-    var result = parseInt($("#exp").text())*difficulty;
+    var enemies = $(".enemy");
+    enemies.stop();
+    var result = parseInt($("#exp").text())/difficulty;
     sprite.stop();
 
     $(".container").removeClass("show");
@@ -839,11 +845,23 @@ $(document).ready(function() {
     $("#menuText").addClass("hide");
     $(".gameOver").addClass("show");
     $("#result").text(result);
+
+    $("#saveResult").on("click", function(){
+      var tip = $("#tip");
+      if ($("#inputName").val().length > 12){
+        tip.text("Maximum 12 characters");
+      }
+      else {
+        highscore("add");
+        tip.text("Result saved").css("color", "green");
+        $(this).off();
+      }
+    });
   }
 
   function startGame(){
-    var audioFireball = $("audio")[0];
-    audioFireball.play();
+    var audioLaugh = $("audio")[0];
+    audioLaugh.play();
 
     var blackScreen = $(".blackScreen");
     var startText = $(".startText");
@@ -851,7 +869,6 @@ $(document).ready(function() {
     var startAnimationText = $(".startAnimationText");
     var portal = $(".portal");
 
-    clearBattlefield();
     lifes.text(maxLifes);
     $("#exp").text("0");
     mana.text("100");
@@ -884,33 +901,31 @@ $(document).ready(function() {
         startAnimation.removeClass("show");
         blackScreen.removeClass("show");
         clearBattlefield();
-
         level1();
-
-      }, 100)
-    }, 100)
+      }, 3000);
+    }, 3000)
 
     function level1(){
       container.css("background-image", "url(./images/Battleback_snow1.png)");
       moveSystem(30, 890, 70, 570);
-      createEnemy(25, "ent");
-      createPortal(10000, 2);
+      createEnemy(25, "mummy");
+      createPortal(30000, 2);
     }
     function level2(){
       container.css("background-image", "url(./images/Battleback_snow2.png)");
       moveSystem(30, 890, 70, 570);
-      createEnemy(1, "medusa");
-      createEnemy(1, "ent");
-      createEnemy(5, "mummy");
-      createPortal(10000, 3);
+      createEnemy(3, "medusa");
+      createEnemy(5, "ent");
+      createEnemy(15, "mummy");
+      createPortal(30000, 3);
     }
     function level3(){
       container.css("background-image", "url(./images/Battleback_snow3.png)");
       moveSystem(30, 890, 70, 570);
       createEnemy(1, "blackKnight");
       createEnemy(3, "cyclop");
-      createEnemy(15, "harpy");
-      createPortal(40000, 4);
+      createEnemy(10, "harpy");
+      createPortal(30000, 4);
     }
     function level4(){
       container.css("background-image", "url(./images/Battleback_snow4.png)");
@@ -919,24 +934,24 @@ $(document).ready(function() {
       createEnemy(5, "medusa");
       createEnemy(10, "ent");
       createEnemy(3, "harpy");
-      createPortal(50000, 5);
+      createPortal(30000, 5);
     }
     function level5(){
       container.css("background-image", "url(./images/Battleback_snow5.png)");
       moveSystem(30, 890, 70, 570);
-      createEnemy(3, "blackKnight");
+      createEnemy(5, "blackKnight");
       createEnemy(7, "behemoth");
       createEnemy(15, "ent");
       createEnemy(5, "medusa");
-      createPortal(50000, 6);
+      createPortal(40000, 6);
     }
     function level6(){
       container.css("background-image", "url(./images/Battleback_snow6.png)");
       moveSystem(30, 890, 70, 570);
-      createEnemy(7, "blackKnight");
-      createEnemy(7, "cyclop");
-      createEnemy(7, "behemoth");
-      createPortal(50000, 7);
+      createEnemy(10, "blackKnight");
+      createEnemy(10, "cyclop");
+      createEnemy(10, "behemoth");
+      createPortal(40000, 7);
     }
 
     function clearBattlefield(){
@@ -975,6 +990,60 @@ $(document).ready(function() {
     }
   }
 
+  function getHighScore(){
+    var results = app.database().ref();
+
+    results.on("value", function(data) {
+      scores = data.val();
+    }, function (error) {
+      console.log("Error: " + error.code);
+    });
+  }
+
+  function highscore(method){
+    var arrKeys = [];
+    var arrValues = [];
+
+    $.map(scores, function(value, key) {
+      arrKeys.push(key);
+      arrValues.push(value);
+    })
+    arrKeys.reverse();
+    arrValues.reverse();
+
+    if (method === "add"){
+      var results = app.database().ref();
+      var finalObj = {};
+      var finalName = $("#inputName").val();
+      var finalResult = $("#result").text();
+      arrKeys.push(finalResult);
+      arrKeys.sort(function(a, b){return b-a});
+      var realIndex = $.inArray(finalResult, arrKeys);
+      arrValues.splice(realIndex, 0, finalName);
+      for (var i = 0; i < 10; i++){
+        if (finalObj[arrKeys[i]] == null){
+          finalObj[arrKeys[i]] = arrValues[i];
+        }
+        else {
+          finalObj[arrKeys[i]-1] = arrValues[i];
+        }
+      }
+      results.set(finalObj);
+      return true;
+    }
+
+    var namesList = $("#highscoreNames");
+    var scoresList = $("#highscoreResults");
+
+    namesList.children().remove();
+    scoresList.children().remove();
+
+    for (var i = 0; i < 10; i++){
+      scoresList.append($("<li>"+arrKeys[i]+"</li>").addClass("highscoreItems"));
+      namesList.append($("<li>"+arrValues[i]+"</li>").addClass("highscoreItems"));
+    }
+  }
+
   function main(){
     var menuContainer = $(".menu");
     var startBtn = $("#start");
@@ -995,6 +1064,7 @@ $(document).ready(function() {
 
     var menuSong = $("audio")[1];
     menuSong.play();
+    getHighScore();
 
     startBtn.on("click", function(){
       menuContainer.addClass("hide");
@@ -1017,6 +1087,7 @@ $(document).ready(function() {
       menuText.addClass("hide");
       scorePanel.addClass("show");
       backBtn.addClass("show");
+      highscore();
     });
     easyBtn.on("click", function(){
       difficulty = 1.5;

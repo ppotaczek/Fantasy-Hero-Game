@@ -88,16 +88,37 @@ body {
   background-size: cover;
   background-image: url("..//images/thor2.png");
 }
-
 .menu {
   position: relative;
   width: 1000px;
   height: 750px;
   margin: 0 auto;
   border: 2px solid black;
-  margin-top: 20px;
+  margin-top: 5px;
   z-index: 1002;
   background-image: url("..//images/menu/menu_bg.jpg");
+}
+.scoreScreen {
+  width: 100%;
+  position: absolute;
+  display: none;
+}
+.highscoreLists {
+  display: inline-block;
+  font-size: 20px;
+  margin: 20px -2px;
+  padding: 10px;
+  width: 200px;
+}
+.highscoreItems {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  margin: 5px -2px;
+  padding: 10px;
+}
+.listsContainer {
+  text-align: center;
 }
 .gameOver {
   display: none;
@@ -107,6 +128,7 @@ body {
   transform: translateY(-50%);
 }
 .gameOverOptions {
+  margin-top: 80px;
   text-align: center;
 }
 .overOptions {
@@ -114,6 +136,18 @@ body {
   display: inline-block;
   margin: 0 100px;
   padding: 20px;
+}
+#inputName {
+  background-color: rgba(0, 0, 0, 0.4);
+  height: 50px;
+  margin: 20px 30px;
+  color: white;
+  padding: 5px;
+  font-size: 40px;
+}
+#saveResult {
+  cursor: pointer;
+  height: 71px;
 }
 #menuText {
   font-family: 'Amatic SC', cursive;
@@ -123,10 +157,19 @@ body {
   transform: translateY(-50%);
   cursor: pointer;
 }
+#tip {
+  position: absolute;
+  color: red;
+  font-weight: normal;
+  font-size: 12px;
+  bottom: 2px;
+  left: 36%;
+}
 .menuText {
+  position: relative;
   font-weight: bold;
   background-color: rgba(0, 0, 0, 0.4);
-  margin-top: 20px;
+  margin-top: 15px;
   text-align: center;
   font-family: 'Amatic SC', cursive;
   font-size: 50px;
@@ -137,15 +180,9 @@ body {
   position: absolute;
   width: 300px;
   right: 10%;
-  top: 80%;
+  top: 85%;
   display: none;
   cursor: pointer;
-}
-.scoreScreen {
-  width: 100%;
-  position: absolute;
-  top: 40%;
-  display: none;
 }
 .difficultyLevel {
   text-align: center;
@@ -164,7 +201,7 @@ body {
 }
 .controlPanel {
   display: inline-block;
-  height: 210px;
+  height: 220px;
   position: relative;
 }
 .control {
@@ -184,6 +221,7 @@ body {
 }
 .space {
   width: 100px;
+  margin-bottom: 25px;
 }
 .controlDescription {
   text-align: left;
@@ -199,7 +237,7 @@ body {
   width: 1000px;
   height: 700px;
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 5px;
   border: 1px solid black;
   background-image: url("..//images/Battleback_snow1.png");
   background-size: cover;
