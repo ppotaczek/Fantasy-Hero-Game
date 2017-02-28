@@ -5,6 +5,7 @@ $(document).ready(function() {
   };
   var app = firebase.initializeApp(config);
   var container = $(".container");
+  var gamePanel = $(".panel");
   var sprite = container.find(".sprite");
   var difficulty = 1;
   var maxLifes = 25;
@@ -835,7 +836,7 @@ $(document).ready(function() {
     }
     var enemies = $(".enemy");
     enemies.stop();
-    var result = parseInt($("#exp").text())/difficulty;
+    var result = Math.floor(parseInt($("#exp").text())/difficulty);
     sprite.stop();
 
     $(".container").removeClass("show");
@@ -900,7 +901,10 @@ $(document).ready(function() {
         startAnimationText.fadeOut(0);
         startAnimation.removeClass("show");
         blackScreen.removeClass("show");
+        container.addClass("show");
+        gamePanel.addClass("show");
         clearBattlefield();
+        portal.css("display", "none");
         level1();
       }, 3000);
     }, 3000)
@@ -1049,8 +1053,6 @@ $(document).ready(function() {
     var startBtn = $("#start");
     var optionsBtn = $("#options");
     var scoreBtn = $("#score");
-    var gameContainer = $(".container");
-    var gamePanel = $(".panel");
     var backBtn = $(".back");
     var menuText = $("#menuText");
     var scorePanel = $(".scoreScreen");
@@ -1068,8 +1070,6 @@ $(document).ready(function() {
 
     startBtn.on("click", function(){
       menuContainer.addClass("hide");
-      gameContainer.addClass("show");
-      gamePanel.addClass("show");
       menuSong.pause();
       startGame();
     });
@@ -1137,8 +1137,6 @@ $(document).ready(function() {
     $("#again").on("click", function(){
       $(".gameOver").removeClass("show");
       menuContainer.addClass("hide");
-      gameContainer.addClass("show");
-      gamePanel.addClass("show");
       menuSong.pause();
       startGame();
     });
