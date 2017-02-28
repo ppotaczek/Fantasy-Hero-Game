@@ -1,8 +1,10 @@
 $(document).ready(function() {
-  var sprite = $(".sprite");
   var container = $(".container");
+  var sprite = container.find(".sprite");
   var difficulty = 1;
-  sprite.attr("data-shoot", "fireball");
+  var maxLifes = 25;
+  var mana = $("#mana");
+  var lifes = $("#lifes");
 
   var enemyPropertiesMummy = {
     class: "enemyMummy",
@@ -32,7 +34,7 @@ $(document).ready(function() {
     directionAttack: "-528px",
     height: 264,
     delay: 4000,
-    life: 3,
+    life: 4,
     randomY: 450,
     frames: 7,
     strength: 3
@@ -49,7 +51,7 @@ $(document).ready(function() {
     directionAttack: "-430px",
     height: 215,
     delay: 3000,
-    life: 4,
+    life: 3,
     randomY: 450,
     frames: 7,
     strength: 2
@@ -125,6 +127,7 @@ $(document).ready(function() {
 
 //Movement system and limit
   function moveSystem(minPosX, maxPosX, minPosY, maxPosY){
+
     $(document).keypress(function(event) {
       var posX = parseInt(sprite.css("left"));
       var posY = parseInt(sprite.css("top"));
@@ -208,14 +211,14 @@ $(document).ready(function() {
     });
   };
 
-  function magicShoot(mana){
-    var actualMana = $("#mana").text();
+  function magicShoot(manaCost){
+    var actualMana = mana.text();
     var heroX = parseInt(sprite.css("left"));
     var heroY = parseInt(sprite.css("top"));
 
-    if (actualMana >= mana){
-      var newMana = parseInt(actualMana) - mana;
-      $("#mana").text(newMana);
+    if (actualMana >= manaCost){
+      var newMana = parseInt(actualMana) - manaCost;
+      mana.text(newMana);
       var magicShootDiv = $("<div>")
         .addClass("magicShoot")
         .css("left", heroX+60+"px")
@@ -235,11 +238,11 @@ $(document).ready(function() {
     }
   }
 
-  function armagedon(mana){
-    var actualMana = $("#mana").text();
-    if (actualMana >= mana){
-      var newMana = parseInt(actualMana) - mana;
-      $("#mana").text(newMana);
+  function armagedon(manaCost){
+    var actualMana = mana.text();
+    if (actualMana >= manaCost){
+      var newMana = parseInt(actualMana) - manaCost;
+      mana.text(newMana);
       var armagedonDiv = $("<div>")
         .addClass("armagedon");
       container.append(armagedonDiv);
@@ -249,36 +252,37 @@ $(document).ready(function() {
       var armagedonInterval = setInterval(function(){
         armagedonIteration++;
         armagedonDiv.css("background-image", "url(./images/magic/C06spF"+armagedonIteration+".png)");
-        if (armagedonIteration > 20){
+        if (armagedonIteration > 19){
           clearInterval(armagedonInterval);
+          armagedonDiv.remove();
         }
       }, 60);
     }
   }
 
-  function defenseMagic(spellClass, step, frames, mana){
-    var actualMana = $("#mana").text();
+  function defenseMagic(spellClass, step, frames, manaCost){
+    var actualMana = mana.text();
 
-    if (actualMana >= mana){
+    if (actualMana >= manaCost){
       var heroX = parseInt(sprite.css("left"));
       var heroY = parseInt(sprite.css("top"));
-      var newMana = parseInt(actualMana) - mana;
-      $("#mana").text(newMana);
+      var newMana = parseInt(actualMana) - manaCost;
+      mana.text(newMana);
 
       var magicDiv = $("<div>")
-      .addClass(spellClass)
-      .css("left", heroX+"px")
-      .css("top", heroY+"px");
+        .addClass(spellClass)
+        .css("left", heroX+"px")
+        .css("top", heroY+"px");
       container.append(magicDiv);
 
       if (spellClass=="magicCure"){
-        $("#lifes").text("25");
+        lifes.text(maxLifes);
       }
       else if (spellClass = "magicShield"){
         sprite.addClass("hit");
         setTimeout(function(){
           sprite.removeClass("hit");
-        }, 10000)
+        }, 20000);
       }
 
       var magicIteration = 0;
@@ -295,7 +299,7 @@ $(document).ready(function() {
   }
 
   function createEnemy(number, enemyType){
-    for (var i = 0; i < number; i++){
+    for (var k = 0; k < number; k++){
 
       if (enemyType == "mummy"){
         var enemyProperties = enemyPropertiesMummy;
@@ -315,13 +319,7 @@ $(document).ready(function() {
             {duration: 2000*difficulty, easing: "linear", complete: function(){
               enemy.pause()
                 .addClass(enemyProperties.class2);
-              if (enemy.attr("data-life") < 1){
-                return false;
-              }
               setTimeout(function(){
-                if (enemy.attr("data-life") < 1){
-                  return false;
-                }
                 enemy.removeClass(enemyProperties.class2)
                   .resume()
                   .animate({left: "-250px", top: randomDirection},
@@ -345,9 +343,9 @@ $(document).ready(function() {
           enemy.animate({right: "50px"},
             {duration: 1000*difficulty, easing: "linear"})
             .animate({left: sprite.css("left"), top: sprite.css("top")},
-            {duration: 4000*difficulty, easing: "linear", complete: function(){
+            {duration: 4000*difficulty-(parseInt(sprite.css("left"))*3), easing: "linear", complete: function(){
               enemy.animate({left: 800, top: randomDirection},
-                {duration: 4000*difficulty, easing: "linear", complete: function(){
+                {duration: 4000*difficulty-(parseInt(sprite.css("left"))*3), easing: "linear", complete: function(){
                   enemyAnimate(enemy, randomDirection);
                 }})
             }});
@@ -359,9 +357,9 @@ $(document).ready(function() {
           enemy.animate({right: "50px"},
             {duration: 2000*difficulty, easing: "linear"})
             .animate({left: sprite.css("left"), top: sprite.css("top")},
-            {duration: 6000*difficulty, easing: "linear", complete: function(){
+            {duration: 6000*difficulty-(parseInt(sprite.css("left"))*3), easing: "linear", complete: function(){
               enemy.animate({left: 800, top: randomDirection},
-                {duration: 6000*difficulty, easing: "linear", complete: function(){
+                {duration: 6000*difficulty-(parseInt(sprite.css("left"))*3), easing: "linear", complete: function(){
                   enemyAnimate(enemy, randomDirection);
                 }})
             }});
@@ -399,7 +397,7 @@ $(document).ready(function() {
         intervalBGAnimation(enemyProperties, enemy);
         enemyAnimate(enemy, randomDirection);
 
-      }, enemyProperties.delay*i);
+      }, enemyProperties.delay*k);
     }
   }
 
@@ -410,7 +408,7 @@ $(document).ready(function() {
     }
     var interval = setInterval(function(){
 
-      var heroPosX = parseInt(sprite.css("left"))+43;
+      var heroPosX = parseInt(sprite.css("left"))+63;
       var heroPosY = parseInt(sprite.css("top"))+113;
       var thisX = parseInt(enemy.css("left"));
       var thisY = parseInt(enemy.css("top"));
@@ -427,7 +425,7 @@ $(document).ready(function() {
       if (thisY <= heroPosY && thisY + height/3 >= heroPosY-100 && conditionX){
         dirAtt = parseInt(dirAtt)/2+"px";
       }
-      else if (thisY + 2*height/3 <= heroPosY-100 && thisY + height >= heroPosY-100 && conditionX){
+      else if (thisY + height/3*2 <= heroPosY-100 && thisY + height >= heroPosY-100 && conditionX){
         dirAtt = parseInt(dirAtt) + parseInt(dirAtt)/2+"px";
       }
 
@@ -531,11 +529,14 @@ $(document).ready(function() {
   }
 
   function shoot(posY, posX){
+    var shootSong = $("audio")[5];
+    shootSong.play();
     var heroShootIterate = 0;
     sprite.addClass("heroShooter");
 
     var heroShootInterval = setInterval(function(){
-      sprite.css("background-position", -153 * heroShootIterate + "px" + " 0")
+      sprite.css("background-position", -155 * heroShootIterate + "px" + " 0")
+      .css("width", "155px")
       .addClass("spriteShoot");
       if(sprite.attr("data-shoot") == "thor"){
         sprite.addClass("spriteThor");
@@ -547,16 +548,19 @@ $(document).ready(function() {
 
       if (heroShootIterate > 2){
         clearInterval(heroShootInterval);
-        sprite.removeClass("heroShooter");
+        sprite.removeClass("heroShooter")
+        .css("width", "63px");
+
         var bullet = $("<div>");
         container.append(bullet);
         killEnemy(bullet);
+
         sprite.css("background-position", "0 0")
           .removeClass("spriteShoot")
           .removeClass("spriteThor")
           .removeClass("spriteShootExplosion");
 
-        if (sprite.attr("data-shoot") == "fireball"){
+        if (sprite.attr("data-shoot") === "fireball"){
           bullet.addClass("bullet")
             .css("top", posY+30)
             .css("left", posX+100);
@@ -564,20 +568,15 @@ $(document).ready(function() {
             {duration: 1000, easing: "linear", complete: function(){$(this).remove();}});
         }
 
-        else if (sprite.attr("data-shoot") == "fireballExplosion"){
+        else if (sprite.attr("data-shoot") === "fireballExplosion"){
           bullet.addClass("explosionBullet")
             .css("top", posY+20)
             .css("left", posX+100);
             bullet.animate({left: posX+1000},
-            {duration: 1000, easing: "linear", complete: function(){
-              if (!$(this).hasClass("explosion")){
-                $(this).remove();
-              }
-            }
-          });
+            {duration: 1000, easing: "linear", complete: function(){$(this).remove();}});
         }
 
-        else if (sprite.attr("data-shoot") == "thor"){
+        else if (sprite.attr("data-shoot") === "thor"){
           bullet.addClass("thunderclap")
             .css("top", posY-5)
             .css("left", posX+50);
@@ -596,28 +595,42 @@ $(document).ready(function() {
   }
 
   function hitHero(power){
-    var actualLifes = ($("#lifes").text())-power;
-    $("#lifes").text(actualLifes);
-    sprite.addClass("hit");
-    for (var i = 0; i < 39; i++) {
-      sprite.toggle(80);
+    var hitSong = $("audio")[4];
+    hitSong.play();
+    var actualLifes = lifes.text()-power;
+    lifes.text(actualLifes);
+
+    if (lifes.text() < 1){
+      lifes.text("0");
+      setTimeout(function(){
+        gameOver();
+      }, 500);
+    }
+
+    sprite.addClass("hit")
+      .css("width", "63px");
+    for (var i = 0; i < 40; i++) {
+      sprite.toggle(40);
       i++;
     }
     setTimeout(function(){sprite.removeClass("hit");}, 4000);
   }
 
   function addExperience(amount){
-    var actualExp = parseInt($("#exp").text());
+    var experience = $("#exp");
+
+    var actualExp = parseInt(experience.text());
     var newExp = actualExp+parseInt(amount);
-    var actualMana = parseInt($("#mana").text());
+
+    var actualMana = parseInt(mana.text());
     var newMana = actualMana+2;
-    $("#exp").text(newExp);
-    $("#mana").text(newMana);
-    if (actualExp > 10){
-      sprite.attr("data-shoot", "fireballExplosion");
-    }
-    else if (actualExp > 200){
+    experience.text(newExp);
+    mana.text(newMana);
+    if (newExp > 10){
       sprite.attr("data-shoot", "thor");
+    }
+    else if (newExp > 4000){
+      sprite.attr("data-shoot", "fireballExplosion");
     }
   }
 
@@ -627,49 +640,73 @@ $(document).ready(function() {
       .addClass(typeProperties.destroyClass)
     var hitAnimation = setInterval(function(){
       if (hit.attr("data-life") < 1){
+        clearInterval(hitAnimation);
+        killAnimation(hit, typeProperties);
         return false;
       }
       iteration++;
       hit.css("background-position", typeProperties.attackStart+(iteration*typeProperties.moveStep)+"px "+typeProperties.height*(-4)+"px");
       if (iteration == typeProperties.frames-1){
         clearInterval(hitAnimation);
-
       }
     }, 80)
-    setTimeout(function(){
-      hit.resume()
-        .removeClass(typeProperties.destroyClass);
+    if (hit.hasClass("enemy")){
+      setTimeout(function(){
+        hit.resume()
+          .removeClass(typeProperties.destroyClass);
+      }, 500);
+    }
+  }
 
-    }, 500)
+  function afterHitEnemy($this, typeProperties, number){
+    $this.attr("data-life", parseInt($this.attr("data-life")-number));
+
+    if ($this.attr("data-life") > 0){
+      hitEnemy($this, typeProperties);
+    }
+    else if ($this.attr("data-life") < 1){
+      clearInterval($this.attr("data-interval"));
+      $this.css("z-index", 1);
+      addExperience($this.attr("data-experience"));
+      killAnimation($this, typeProperties);
+      $this.stop();
+      setTimeout(function(){
+        $this.stop()
+          .addClass(typeProperties.destroyClass);
+      }, 80)
+    }
   }
 
   function killAnimation(toKill, typeProperties){
+    toKill.addClass(typeProperties.destroyClass)
+      .removeClass("enemy");
     var iteration = 0;
     var killAnimation = setInterval(function(){
       iteration++;
-      toKill.addClass(typeProperties.destroyClass)
-        .css("background-position", (-typeProperties.moveStep*(typeProperties.frames-1))+(iteration*typeProperties.moveStep)+"px "+typeProperties.height+"px")
+      toKill.css("background-position", (-typeProperties.moveStep*(typeProperties.frames-1))+(iteration*typeProperties.moveStep)+"px "+typeProperties.height+"px")
       clearInterval(toKill.attr("data-interval"));
       if (iteration == typeProperties.frames-1){
+        clearInterval(toKill.attr("data-interval"));
         clearInterval(killAnimation);
       }
-    }, 50)
+    }, 50);
+    toKill.stop();
   }
 
   function killEnemy(fireball, magic){
     var intervalCheck = setInterval(function(){
+      var enemies = $(".enemy");
       var fireballPosY = parseInt(fireball.css("top"));
       var fireballPosX = parseInt(fireball.css("left"));
-      var enemies = $(".enemy");
 
       if (magic === "magicShoot"){
         fireball.addClass("bullet");
       }
 
       enemies.each(function(){
-        var thisTop = parseInt($(this).css("top"));
-        var thisLeft = parseInt($(this).css("left"));
         var $this = $(this);
+        var thisTop = parseInt($this.css("top"));
+        var thisLeft = parseInt($this.css("left"));
         var typeProperties = null;
 
         if ($this.hasClass("enemyMummy")){
@@ -693,80 +730,251 @@ $(document).ready(function() {
         else if ($this.hasClass("enemyBlackKnight")){
           typeProperties = enemyPropertiesBlackKnight;
         }
-        if (magic == "armagedon"){
+
+        if (magic === "armagedon"){
           clearInterval(intervalCheck);
           afterHitEnemy($this, typeProperties, 4);
-        }
-        else if (fireball.hasClass("thunderclap") && fireballPosY+40 >= thisTop+30 && fireballPosY <= thisTop+typeProperties.height-30){
-          clearInterval(intervalCheck);
-          afterHitEnemy($this, typeProperties, 1);
+          return true;
         }
 
-        else if (fireball.hasClass("explosionBullet") && fireballPosY+40 >= thisTop+30 && fireballPosY <= thisTop+typeProperties.height-30 && fireballPosX >= thisLeft-20 && fireballPosX <= thisLeft+20){
-          clearInterval(intervalCheck);
-          enemies.each(function(){
-            var thisTopAfter = parseInt($(this).css("top"));
-            var thisLeftAfter = parseInt($(this).css("left"));
+        else if (magic === "eruption"){
+          var condition1 = fireballPosY+100 >= thisTop+30;
+          var condition2 = fireballPosY-100 <= thisTop+typeProperties.height-30;
+          var condition3 = fireballPosX >= thisLeft-130;
+          var condition4 = fireballPosX <= thisLeft+130;
 
-            if(fireballPosY+100 >= thisTopAfter+30 && fireballPosY-100 <= thisTopAfter+typeProperties.height-30 && fireballPosX >= thisLeftAfter-130 && fireballPosX <= thisLeftAfter+130){
-              afterHitEnemy($(this), typeProperties, 1);
-            }
-          })
-          fireball.stop();
-          var explosionIteration = 0;
-          var explosionInterval = setInterval(function(){
-            explosionIteration++;
-            fireball.addClass("explosion")
-              .css("background-position", -2769+explosionIteration*213+"px 0");
-              if (explosionIteration > 13){
-                fireball.remove();
-              }
-          }, 60)
-        }
-
-        else if (fireball.hasClass("bullet") && fireballPosY+40 >= thisTop+30 && fireballPosY <= thisTop+typeProperties.height-30 && fireballPosX >= thisLeft-20 && fireballPosX <= thisLeft+20){
-          clearInterval(intervalCheck);
-          fireball.remove();
-          if (magic === "magicShoot"){
-            afterHitEnemy($this, typeProperties, 4);
+          if (condition1 && condition2 && condition3 && condition4){
+            clearInterval(intervalCheck);
+            setTimeout(function(){
+              afterHitEnemy($this, typeProperties, 1);
+            }, 200);
             return true;
           }
-          afterHitEnemy($this, typeProperties, 1);
+        }
+
+        else if (fireball.hasClass("thunderclap")){
+          var condition1 = fireballPosY+40 >= thisTop+30;
+          var condition2 = fireballPosY <= thisTop+typeProperties.height-30;
+          clearInterval(intervalCheck);
+
+          if (condition1 && condition2){
+            setTimeout(function(){
+              afterHitEnemy($this, typeProperties, 2);
+              fireball.remove();
+            }, 200);
+            return true;
+          }
+          else {
+            setTimeout(function(){
+              fireball.remove();
+              return false;
+            }, 200);
+          }
+        }
+
+        else if (fireball.hasClass("bullet")){
+          var condition1 = fireballPosY+40 >= thisTop+30;
+          var condition2 = fireballPosY <= thisTop+typeProperties.height-30;
+          var condition3 = fireballPosX >= thisLeft-20;
+          var condition4 = fireballPosX <= thisLeft+20;
+
+          if (condition1 && condition2 && condition3 && condition4){
+            clearInterval(intervalCheck);
+            fireball.remove();
+            if (magic === "magicShoot"){
+              afterHitEnemy($this, typeProperties, 4);
+            }
+            else if (fireball.hasClass("bullet")){
+              afterHitEnemy($this, typeProperties, 1);
+            }
+          }
+        }
+
+        else if (fireball.hasClass("explosionBullet")){
+          var condition1 = fireballPosY+40 >= thisTop+30;
+          var condition2 = fireballPosY <= thisTop+typeProperties.height-30;
+          var condition3 = fireballPosX >= thisLeft-20;
+          var condition4 = fireballPosX <= thisLeft+20;
+
+          if (condition1 && condition2 && condition3 && condition4){
+            clearInterval(intervalCheck);
+            fireball.stop();
+            killEnemy(fireball, "eruption");
+            var explosionSong = $("audio")[3];
+            explosionSong.play();
+            var explosionIteration = 0;
+            var explosionInterval = setInterval(function(){
+              explosionIteration++;
+              fireball.addClass("explosion")
+                .css("background-position", -2769+explosionIteration*213+"px 0");
+                if (explosionIteration > 13){
+                  fireball.remove();
+                  clearInterval(explosionInterval);
+                }
+            }, 60)
+            return true;
+          }
         }
       });
     }, 20);
   }
 
-  function afterHitEnemy($this, typeProperties, number){
-    $this.attr("data-life", parseInt($this.attr("data-life")-number));
-    clearInterval($(this).attr("data-interval"));
-
-    if ($this.attr("data-life") > 0){
-      hitEnemy($this, typeProperties);
-    }
-    else if ($this.attr("data-life") < 1){
-      clearInterval($(this).attr("data-interval"));
-      $this.stop()
-        .removeClass("enemy")
-        .css("z-index", 1);
-      killAnimation($this, typeProperties);
-      clearInterval($(this).attr("data-interval"));
-      addExperience($this.attr("data-experience"));
-      $this.stop();
-    }
-  }
-
   function gameOver(){
-    $(".container").children().remove();
+    var menuSong = $("audio")[1];
+    menuSong.play();
+    for (var i = 0; i < 999; i++){
+      clearInterval(i);
+    }
+    container.children().each(function(){
+      stop(true, false);
+    })
+
+    var result = parseInt($("#exp").text())*difficulty;
+    sprite.stop();
+
+    $(".container").removeClass("show");
+    $(".panel").removeClass("show");
+    $("audio")[2].pause();
+    $(".menu").removeClass("hide");
+    $("#menuText").addClass("hide");
+    $(".gameOver").addClass("show");
+    $("#result").text(result);
   }
 
   function startGame(){
-    moveSystem(30, 890, 70, 570);
-    //createEnemy(15, "ent");
-    //createEnemy(5, "mummy");
-    createEnemy(5, "blackKnight");
-    //createEnemy(5, "medusa");
+    var audioFireball = $("audio")[0];
+    audioFireball.play();
+
+    var blackScreen = $(".blackScreen");
+    var startText = $(".startText");
+    var startAnimation = $(".startAnimation");
+    var startAnimationText = $(".startAnimationText");
+    var portal = $(".portal");
+
+    clearBattlefield();
+    lifes.text(maxLifes);
+    $("#exp").text("0");
+    mana.text("100");
+    sprite.removeClass("hit")
+      .attr("data-shoot", "fireball");
+    blackScreen.addClass("show")
+    .css("display", "block")
+      .addClass("startScreen");
+    startText.fadeIn(2000);
+
+    setTimeout(function(){
+      blackScreen.removeClass("startScreen");
+      startText.fadeOut(0);
+      startAnimation.addClass("show");
+      startAnimationText.fadeIn(2000);
+
+      var startIteration = 0;
+      var startInterval = setInterval(function(){
+        startAnimation.css("background-position", -213*startIteration+"px 0");
+        startIteration++;
+        if (startIteration > 13){
+          clearInterval(startInterval);
+        }
+      }, 90);
+
+      setTimeout(function(){
+        var battleSong = $("audio")[2];
+        battleSong.play();
+        startAnimationText.fadeOut(0);
+        startAnimation.removeClass("show");
+        blackScreen.removeClass("show");
+        clearBattlefield();
+
+        level1();
+
+      }, 100)
+    }, 100)
+
+    function level1(){
+      container.css("background-image", "url(./images/Battleback_snow1.png)");
+      moveSystem(30, 890, 70, 570);
+      createEnemy(25, "ent");
+      createPortal(10000, 2);
+    }
+    function level2(){
+      container.css("background-image", "url(./images/Battleback_snow2.png)");
+      moveSystem(30, 890, 70, 570);
+      createEnemy(1, "medusa");
+      createEnemy(1, "ent");
+      createEnemy(5, "mummy");
+      createPortal(10000, 3);
+    }
+    function level3(){
+      container.css("background-image", "url(./images/Battleback_snow3.png)");
+      moveSystem(30, 890, 70, 570);
+      createEnemy(1, "blackKnight");
+      createEnemy(3, "cyclop");
+      createEnemy(15, "harpy");
+      createPortal(40000, 4);
+    }
+    function level4(){
+      container.css("background-image", "url(./images/Battleback_snow4.png)");
+      moveSystem(30, 890, 70, 570);
+      createEnemy(5, "cyclop");
+      createEnemy(5, "medusa");
+      createEnemy(10, "ent");
+      createEnemy(3, "harpy");
+      createPortal(50000, 5);
+    }
+    function level5(){
+      container.css("background-image", "url(./images/Battleback_snow5.png)");
+      moveSystem(30, 890, 70, 570);
+      createEnemy(3, "blackKnight");
+      createEnemy(7, "behemoth");
+      createEnemy(15, "ent");
+      createEnemy(5, "medusa");
+      createPortal(50000, 6);
+    }
+    function level6(){
+      container.css("background-image", "url(./images/Battleback_snow6.png)");
+      moveSystem(30, 890, 70, 570);
+      createEnemy(7, "blackKnight");
+      createEnemy(7, "cyclop");
+      createEnemy(7, "behemoth");
+      createPortal(50000, 7);
+    }
+
+    function clearBattlefield(){
+      sprite.removeClass("hit");
+      container.children().each(function(){
+        clearInterval($(this).attr("data-interval"));
+        $(this).stop();
+      })
+      container.children().not("div.sprite").not("div.portal").remove();
+      blackScreen.fadeIn(200).fadeOut(200);
+      sprite.css({top: 400, left: 0});
+      for (var i = 0; i < 9999; i++){
+        clearInterval(i);
+      }
+      return false;
+    }
+
+    function createPortal(time, number){
+      setTimeout(function(){
+        portal.fadeIn(2000);
+        var portalInterval = setInterval(function(){
+          var spriteX = parseInt(sprite.css("left"));
+          var spriteY = parseInt(sprite.css("top"));
+          if (spriteX > 770 && spriteY < 410 && spriteY > 210){
+            sprite.stop();
+            portal.hide();
+            clearInterval(portalInterval);
+            clearBattlefield();
+            if (number == 7){
+              gameOver();
+            }
+            eval('level'+number+'()');
+          }
+        }, 40)
+      }, time);
+    }
   }
+
   function main(){
     var menuContainer = $(".menu");
     var startBtn = $("#start");
@@ -785,65 +993,84 @@ $(document).ready(function() {
     var instructionsBtn = $("#instructions");
     var instructionsContainer = $(".instructionsScreen");
 
+    var menuSong = $("audio")[1];
+    menuSong.play();
+
     startBtn.on("click", function(){
       menuContainer.addClass("hide");
       gameContainer.addClass("show");
       gamePanel.addClass("show");
+      menuSong.pause();
       startGame();
-    })
+    });
     optionsBtn.on("click", function(){
-      menuText.removeClass("show");
       menuText.addClass("hide");
       backBtn.addClass("show");
       optionsContainer.addClass("show");
-    })
+    });
     instructionsBtn.on("click", function(){
-      menuText.removeClass("show");
       menuText.addClass("hide");
       backBtn.addClass("show");
       instructionsContainer.addClass("show");
-    })
+    });
     scoreBtn.on("click", function(){
-      menuText.removeClass("show");
       menuText.addClass("hide");
       scorePanel.addClass("show");
       backBtn.addClass("show");
-    })
+    });
     easyBtn.on("click", function(){
       difficulty = 1.5;
+      maxLifes = 30;
+      lifes.text(maxLifes);
       easyBtn.addClass("selected");
       mediumBtn.removeClass("selected");
       hardBtn.removeClass("selected");
-    })
+    });
     mediumBtn.on("click", function(){
       difficulty = 1;
+      maxLifes = 25;
+      lifes.text(maxLifes);
       mediumBtn.addClass("selected");
       easyBtn.removeClass("selected");
       hardBtn.removeClass("selected");
-    })
+    });
     hardBtn.on("click", function(){
-      difficulty = 0.7;
+      difficulty = 0.5;
+      maxLifes = 20;
+      lifes.text(maxLifes);
       hardBtn.addClass("selected");
       easyBtn.removeClass("selected");
       mediumBtn.removeClass("selected");
-    })
+    });
     sound.on("click", function(){
       if (sound.text()=="Sound ON"){
         sound.text("Sound OFF");
+        $('audio').prop("volume", 0);
       }
       else if (sound.text()=="Sound OFF"){
         sound.text("Sound ON");
+        $('audio').prop("volume", 1);
       }
-    })
+    });
     backBtn.on("click", function(){
+      menuText.removeClass("hide");
       scorePanel.removeClass("show");
-      menuText.addClass("show");
       backBtn.removeClass("show");
       optionsContainer.removeClass("show");
       instructionsContainer.removeClass("show");
-    })
+    });
+    $("#exit").on("click", function(){
+      $(".gameOver").removeClass("show");
+      menuText.removeClass("hide");
+    });
+    $("#again").on("click", function(){
+      $(".gameOver").removeClass("show");
+      menuContainer.addClass("hide");
+      gameContainer.addClass("show");
+      gamePanel.addClass("show");
+      menuSong.pause();
+      startGame();
+    });
   }
-
   main();
-
 });

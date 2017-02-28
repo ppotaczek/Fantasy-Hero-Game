@@ -2,13 +2,54 @@
 <html lang="pl-PL">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fantasy Hero</title>
     <link rel="stylesheet" href="css/reset.css">
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+  <audio>
+    <source src="audio/evil.mp3"></source>
+  </audio>
+  <audio loop>
+    <source src="audio/menuSong.mp3"></source>
+  </audio>
+  <audio loop>
+    <source src="audio/battleSong1.ogg"></source>
+  </audio>
+  <audio>
+    <source src="audio/fireballexplosion.mp3"></source>
+  </audio>
+  <audio>
+    <source src="audio/scream.mp3"></source>
+  </audio>
+  <audio>
+    <source src="audio/fireballShoot.mp3"></source>
+  </audio>
+
+  <div class="blackScreen">
+    <p class="startText">
+      Upon returning home i found this...<br>
+      Smoldering city engulfed in flames. Scorched bodies everywhere. Despite the overwhelming heat and suffocating smoke I rushed in hoping to find my family still alive.<br>
+      My home ruined. My family... mutilated corpses.<br>
+      Rage awakes inside me, hotter even than surrounding fire.<br>
+      I`ll hunt whoever did this to the ends of the Earth!<br>
+      I`ll destroy them all.<br>
+    </p>
+    <div class="startAnimation"></div>
+    <div class="startAnimationText">FANTASY <br>HERO</div>
+  </div>
   <div class="menu">
+    <div class="gameOver">
+      <div class="menuText">Game Over</div>
+      <div class="menuText">Your result: <span id="result"></span></div>
+      <div class="gameOverOptions">
+        <p class="menuText overOptions" id="exit">Exit</p>
+        <p class="menuText overOptions" id="again">Play again</p>
+      </div>
+    </div>
     <div id="menuText">
       <p id="start" class="menuText">Start Game</p>
       <p id="options" class="menuText">Options</p>
@@ -28,7 +69,7 @@
         <div class="instruction spellArmagedon"></div>
       </div>
       <div class="spellsInstructions">
-        <p class="instructionText">Cure - Hero has 25 lifes again!</p>
+        <p class="instructionText">Cure - Hero has max-life again!</p>
         <p class="instructionText">Shield - Enemies do not attack for 20sec</p>
         <p class="instructionText">Magic Shoot - Special bullet</p>
         <p class="instructionText">Armagedon - Kill almost all enemies!</p>
@@ -86,17 +127,18 @@
   </div>
 
   <div class="container">
+    <div class="portal"></div>
     <div class="sprite"></div>
   </div>
   <div class="panel">
-    <p class="panelElem">
-      Experience: <span id="exp">0</span>
-    </p>
     <p class="panelElem">
       Lifes: <span id="lifes">25</span>
     </p>
     <p class="panelElem">
       Mana: <span id="mana">100</span>
+    </p>
+    <p class="panelElem">
+      Experience: <span id="exp">0</span>
     </p>
     <div class="spells">
       <div class= "spell spellCure"></div>

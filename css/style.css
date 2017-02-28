@@ -8,6 +8,17 @@ body {
   background-size: cover;
   height: 100vh;
 }
+.portal {
+  display: none;
+  right: 20px;
+  top: 50%;
+  position: absolute;
+  z-index: 2;
+  width: 200px;
+  height: 250px;
+  background-image: url("..//images/portal.png");
+  transform: translateY(-50%);
+}
 .spells {
   position: absolute;
   top: 0;
@@ -87,6 +98,22 @@ body {
   margin-top: 20px;
   z-index: 1002;
   background-image: url("..//images/menu/menu_bg.jpg");
+}
+.gameOver {
+  display: none;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.gameOverOptions {
+  text-align: center;
+}
+.overOptions {
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 100px;
+  padding: 20px;
 }
 #menuText {
   font-family: 'Amatic SC', cursive;
@@ -174,7 +201,7 @@ body {
   margin: 0 auto;
   margin-top: 20px;
   border: 1px solid black;
-  background-image: url("..//images/Battleback_snow2.png");
+  background-image: url("..//images/Battleback_snow1.png");
   background-size: cover;
 }
 .panel {
@@ -186,7 +213,7 @@ body {
   background-color: rgba(0, 0, 0, 0.7);
 }
 .panelElem {
-  margin-right: 50px;
+  margin: 0 50px 0 10px;
   display: inline-block;
   color: aqua;
   line-height: 50px;
@@ -199,7 +226,7 @@ body {
   background-repeat: no-repeat;
   position: absolute;
   top: 400px;
-  z-index: 1000;
+  z-index: 1006;
 }
 #sound {
   cursor: pointer;
@@ -248,7 +275,7 @@ body {
   background-image: url("..//images/explosion.png");
   background-position: -2769px 0;
   transform: translateY(-50%);
-  z-index: 1000;
+  z-index: 1009;
 }
 .magicShoot {
   width: 128px;
@@ -256,7 +283,7 @@ body {
   background-image: url("..//images/magic/magic_shoot.png");
   background-size: cover;
   position: absolute;
-  z-index: 1000;
+  z-index: 1009;
   transform: translateX(-30%);
 }
 .magicShield {
@@ -266,7 +293,7 @@ body {
   background-image: url("..//images/magic/shield-magic.png");
   background-position: -2769px 0;
   transform: translateY(30%);
-  z-index: 1000;
+  z-index: 1009;
 }
 .magicCure {
   width: 90px;
@@ -275,14 +302,14 @@ body {
   background-image: url("..//images/magic/cure.png");
   background-position: -2769px 0;
   transform: translateY(-50%);
-  z-index: 1000;
+  z-index: 1009;
   transform: translateX(-20%);
 }
 .armagedon {
   width: 100%;
   height: 100%;
   position: absolute;
-  z-index: 1001;
+  z-index: 1009;
   background-size: auto;
 }
 .enemyMedusaBullet {
@@ -380,6 +407,55 @@ body {
 }
 .enemyCyclop2 {
   background-image: url("..//images/cyclop2.png");
+}
+.blackScreen {
+  display: none;
+  position: relative;
+  width: 1000px;
+  height: 750px;
+  margin: 0 auto;
+  border: 2px solid black;
+  margin-top: 20px;
+  z-index: 1003;
+  background-color: black;
+}
+.startText {
+  display: none;
+  padding: 40px;
+  background-color: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  right: 60px;
+  top: 60px;
+  width: 580px;
+  font-family: 'Amatic SC', cursive;
+  color: white;
+  font-size: 34px;
+}
+.startScreen {
+  background-size: cover;
+  background-image: url("..//images/menu/burning.jpg");
+}
+.startAnimation {
+  background-repeat: no-repeat;
+  width: 213px;
+  height: 233px;
+  background-image: url("..//images/menu/bullet-explosion.png");
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.startAnimationText {
+  text-align: center;
+  font-family: 'Amatic SC', cursive;
+  font-size: 60px;
+  color: white;
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .selected {
   color: red;
