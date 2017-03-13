@@ -17,6 +17,11 @@ body {
   width: 200px;
   height: 250px;
   background-image: url("..//images/portal.png");
+
+  -ms-transform: translateY(-50%); /* IE 9 */
+  -o-transform: translateY(-50%); /* Opera 10.5 */
+  -moz-transform: translateY(-50%); /* Firefox 3.5 */
+  -webkit-transform: translateY(-50%); /* Chrome, Safari, Opera */
   transform: translateY(-50%);
 }
 .spells {
@@ -125,6 +130,11 @@ body {
   width: 100%;
   position: absolute;
   top: 50%;
+
+  -ms-transform: translateY(-50%); /* IE 9 */
+  -o-transform: translateY(-50%); /* Opera 10.5 */
+  -moz-transform: translateY(-50%); /* Firefox 3.5 */
+  -webkit-transform: translateY(-50%); /* Chrome, Safari, Opera */
   transform: translateY(-50%);
 }
 .gameOverOptions {
@@ -154,8 +164,13 @@ body {
   position: absolute;
   right: 10%;
   top: 50%;
-  transform: translateY(-50%);
   cursor: pointer;
+
+  -ms-transform: translateY(-50%); /* IE 9 */
+  -o-transform: translateY(-50%); /* Opera 10.5 */
+  -moz-transform: translateY(-50%); /* Firefox 3.5 */
+  -webkit-transform: translateY(-50%); /* Chrome, Safari, Opera */
+  transform: translateY(-50%);
 }
 #tip {
   position: absolute;
@@ -312,8 +327,13 @@ body {
   position: absolute;
   background-image: url("..//images/explosion.png");
   background-position: -2769px 0;
-  transform: translateY(-50%);
   z-index: 1009;
+
+  -ms-transform: translateY(-50%); /* IE 9 */
+  -o-transform: translateY(-50%); /* Opera 10.5 */
+  -moz-transform: translateY(-50%); /* Firefox 3.5 */
+  -webkit-transform: translateY(-50%); /* Chrome, Safari, Opera */
+  transform: translateY(-50%);
 }
 .magicShoot {
   width: 128px;
@@ -322,6 +342,11 @@ body {
   background-size: cover;
   position: absolute;
   z-index: 1009;
+
+  -ms-transform: translateX(-30%); /* IE 9 */
+  -o-transform: translateX(-30%); /* Opera 10.5 */
+  -moz-transform: translateX(-30%); /* Firefox 3.5 */
+  -webkit-transform: translateX(-30%); /* Chrome, Safari, Opera */
   transform: translateX(-30%);
 }
 .magicShield {
@@ -330,8 +355,13 @@ body {
   position: absolute;
   background-image: url("..//images/magic/shield-magic.png");
   background-position: -2769px 0;
-  transform: translateY(30%);
   z-index: 1009;
+
+  -ms-transform: translateY(30%); /* IE 9 */
+  -o-transform: translateY(30%); /* Opera 10.5 */
+  -moz-transform: translateY(30%); /* Firefox 3.5 */
+  -webkit-transform: translateY(30%); /* Chrome, Safari, Opera */
+  transform: translateY(30%);
 }
 .magicCure {
   width: 90px;
@@ -339,8 +369,12 @@ body {
   position: absolute;
   background-image: url("..//images/magic/cure.png");
   background-position: -2769px 0;
-  transform: translateY(-50%);
   z-index: 1009;
+
+  -ms-transform: translateX(-20%); /* IE 9 */
+  -o-transform: translateX(-20%); /* Opera 10.5 */
+  -moz-transform: translateX(-20%); /* Firefox 3.5 */
+  -webkit-transform: translateX(-20%); /* Chrome, Safari, Opera */
   transform: translateX(-20%);
 }
 .armagedon {
@@ -379,6 +413,12 @@ body {
   transform: translateY(-34px);
   background-image: url("..//images/mummy2.png");
   height: 203px;
+
+  -ms-transform: translateY(-34px); /* IE 9 */
+  -o-transform: translateY(-34px); /* Opera 10.5 */
+  -moz-transform: translateY(-34px); /* Firefox 3.5 */
+  -webkit-transform: translateY(-34px); /* Chrome, Safari, Opera */
+  transform: translateY(-34px);
 }
 .enemyBehemoth {
   right: -100px;
@@ -482,6 +522,11 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
+
+  -ms-transform: translate(-50%, -50%); /* IE 9 */
+  -o-transform: translate(-50%, -50%); /* Opera 10.5 */
+  -moz-transform: translate(-50%, -50%); /* Firefox 3.5 */
+  -webkit-transform: translate(-50%, -50%); /* Chrome, Safari, Opera */
   transform: translate(-50%, -50%);
 }
 .startAnimationText {
@@ -493,14 +538,36 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
+
+  -ms-transform: translate(-50%, -50%); /* IE 9 */
+  -o-transform: translate(-50%, -50%); /* Opera 10.5 */
+  -moz-transform: translate(-50%, -50%); /* Firefox 3.5 */
+  -webkit-transform: translate(-50%, -50%); /* Chrome, Safari, Opera */
   transform: translate(-50%, -50%);
 }
 .selected {
   color: red;
+}
+#onMobile {
+  display: none;
 }
 .hide {
   display: none;
 }
 .show {
   display: block;
+}
+@media (max-width: 999px) {
+  #onMobile {
+    position: absolute;
+    text-align: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    font-size: 20px;
+    color: white;
+    display: block;
+    line-height: 100vh;
+    z-index: 1200;
+  }
 }
