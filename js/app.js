@@ -850,12 +850,13 @@ $(document).ready(function() {
     $("#saveResult").on("click", function(){
       var tip = $("#tip");
       if ($("#inputName").val().length > 12){
+        console.log("max 12");
         tip.text("Maximum 12 characters");
       }
       else {
+        $(this).off();
         highscore("add");
         tip.text("Result saved").css("color", "green");
-        $(this).off();
       }
     });
   }
@@ -870,6 +871,8 @@ $(document).ready(function() {
     var startAnimationText = $(".startAnimationText");
     var portal = $(".portal");
 
+    $("#inputName").val("");
+    $("#tip").text("");
     lifes.text(maxLifes);
     $("#exp").text("0");
     mana.text("100");
@@ -1073,22 +1076,26 @@ $(document).ready(function() {
       menuSong.pause();
       startGame();
     });
+    
     optionsBtn.on("click", function(){
       menuText.addClass("hide");
       backBtn.addClass("show");
       optionsContainer.addClass("show");
     });
+
     instructionsBtn.on("click", function(){
       menuText.addClass("hide");
       backBtn.addClass("show");
       instructionsContainer.addClass("show");
     });
+
     scoreBtn.on("click", function(){
       menuText.addClass("hide");
       scorePanel.addClass("show");
       backBtn.addClass("show");
       highscore();
     });
+
     easyBtn.on("click", function(){
       difficulty = 1.5;
       maxLifes = 30;
@@ -1097,6 +1104,7 @@ $(document).ready(function() {
       mediumBtn.removeClass("selected");
       hardBtn.removeClass("selected");
     });
+
     mediumBtn.on("click", function(){
       difficulty = 1;
       maxLifes = 25;
@@ -1105,6 +1113,7 @@ $(document).ready(function() {
       easyBtn.removeClass("selected");
       hardBtn.removeClass("selected");
     });
+
     hardBtn.on("click", function(){
       difficulty = 0.5;
       maxLifes = 20;
@@ -1113,6 +1122,7 @@ $(document).ready(function() {
       easyBtn.removeClass("selected");
       mediumBtn.removeClass("selected");
     });
+
     sound.on("click", function(){
       if (sound.text()=="Sound ON"){
         sound.text("Sound OFF");
@@ -1123,6 +1133,7 @@ $(document).ready(function() {
         $('audio').prop("volume", 1);
       }
     });
+
     backBtn.on("click", function(){
       menuText.removeClass("hide");
       scorePanel.removeClass("show");
@@ -1130,16 +1141,21 @@ $(document).ready(function() {
       optionsContainer.removeClass("show");
       instructionsContainer.removeClass("show");
     });
+
     $("#exit").on("click", function(){
       $(".gameOver").removeClass("show");
+      $("#saveResult").off();
       menuText.removeClass("hide");
     });
+
     $("#again").on("click", function(){
       $(".gameOver").removeClass("show");
+      $("#saveResult").off();
       menuContainer.addClass("hide");
       menuSong.pause();
       startGame();
     });
   }
+
   main();
 });
