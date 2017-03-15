@@ -138,7 +138,6 @@ $(document).ready(function() {
 
 //Movement system and limit
   function moveSystem(minPosX, maxPosX, minPosY, maxPosY){
-
     $(document).keypress(function(event) {
       var posX = parseInt(sprite.css("left"));
       var posY = parseInt(sprite.css("top"));
@@ -148,11 +147,13 @@ $(document).ready(function() {
       function spriteAnimateProperties(displacement){
         return {duration: 120, complete: function(){sprite.css("background-position", displacement);}}
       }
+
       function spriteAnimateLeft(value){
         sprite.animate({left: value}, spriteAnimateProperties("-63px 0"));
         sprite.animate({left: value}, spriteAnimateProperties("-126px 0"));
         sprite.animate({left: value}, spriteAnimateProperties("0 0"));
       }
+
       function spriteAnimateTop(value){
         sprite.animate({top: value}, spriteAnimateProperties("-63px 0"));
         sprite.animate({top: value}, spriteAnimateProperties("-126px 0"));
@@ -160,34 +161,37 @@ $(document).ready(function() {
       }
 
       if (!shooter && !animate){
-        if(event.which == 97 && posX >= minPosX) {
-          spriteAnimateLeft("-=20px");
-        }
-        else if(event.which == 100 && posX <= maxPosX) {
-          spriteAnimateLeft("+=20px");
-        }
-        else if(event.which == 119 && posY >= minPosY) {
-          spriteAnimateTop("-=20px");
-        }
-        else if(event.which == 115 && posY <= maxPosY) {
-          spriteAnimateTop("+=20px");
-        }
-        //Shooting
-        else if(event.which == 32) {
-          shoot(posY, posX);
-        }
-        //Magic
-        else if(event.which == 49) {
-          defenseMagic("magicCure", 90, 20, 40);
-        }
-        else if(event.which == 50) {
-          defenseMagic("magicShield", 56, 16, 20);
-        }
-        else if(event.which == 51) {
-          magicShoot(30);
-        }
-        else if(event.which == 52) {
-          armagedon(50);
+        switch (true){
+          case (event.which == 97 && posX >= minPosX):
+            spriteAnimateLeft("-=20px");
+            break;
+          case (event.which == 100 && posX <= maxPosX):
+            spriteAnimateLeft("+=20px");
+            break;
+          case (event.which == 119 && posY >= minPosY):
+            spriteAnimateTop("-=20px");
+            break;
+          case (event.which == 115 && posY <= maxPosY):
+            spriteAnimateTop("+=20px");
+            break;
+
+          //Shooting
+          case (event.which == 32):
+            shoot(posY, posX);
+            break;
+          //Magic
+          case (event.which == 49):
+            defenseMagic("magicCure", 90, 20, 40);
+            break;
+          case (event.which == 50):
+            defenseMagic("magicShield", 56, 16, 20);
+            break;
+          case (event.which == 51):
+            magicShoot(30);
+            break;
+          case (event.which == 52):
+            armagedon(50);
+            break;
         }
       }
     });
@@ -199,6 +203,7 @@ $(document).ready(function() {
         defenseMagic("magicCure", 90, 20, 40);
       }
     });
+
     $(".spellShield").on("click", function(){
       var animate = sprite.is(':animated');
       var shooter = sprite.hasClass("heroShooter");
@@ -206,6 +211,7 @@ $(document).ready(function() {
         defenseMagic("magicShield", 56, 16, 20);
       }
     });
+
     $(".spellMagicShoot").on("click", function(){
       var animate = sprite.is(':animated');
       var shooter = sprite.hasClass("heroShooter");
@@ -213,6 +219,7 @@ $(document).ready(function() {
         magicShoot(30);
       }
     });
+
     $(".spellArmagedon").on("click", function(){
       var animate = sprite.is(':animated');
       var shooter = sprite.hasClass("heroShooter");
@@ -241,7 +248,7 @@ $(document).ready(function() {
       var magicCheckInterval = setInterval(function(){
         magicIteration++;
         magicShootDiv.css("background-position", 128*magicIteration+"px 0");
-      })
+      });
       killEnemy(magicShootDiv, "magicShoot");
       setTimeout(function(){
         clearInterval(magicCheckInterval);
@@ -311,7 +318,6 @@ $(document).ready(function() {
 
   function createEnemy(number, enemyType){
     for (var k = 0; k < number; k++){
-
       if (enemyType == "mummy"){
         var enemyProperties = enemyPropertiesMummy;
 
@@ -445,7 +451,6 @@ $(document).ready(function() {
         enemy.pause()
           .addClass(enemyProperties.class2);
         iterationAttack(enemyProperties, enemy, dirAtt);
-
       }
     }, 100);
   }
@@ -716,26 +721,34 @@ $(document).ready(function() {
         var thisLeft = parseInt($this.css("left"));
         var typeProperties = null;
 
-        if ($this.hasClass("enemyMummy")){
-          typeProperties = enemyPropertiesMummy;
-        }
-        else if ($this.hasClass("enemyBehemoth")){
-          typeProperties = enemyPropertiesBehemoth;
-        }
-        else if ($this.hasClass("enemyEnt")){
-          typeProperties = enemyPropertiesEnt;
-        }
-        else if ($this.hasClass("enemyMedusa")){
-          typeProperties = enemyPropertiesMedusa;
-        }
-        else if ($this.hasClass("enemyCyclop")){
-          typeProperties = enemyPropertiesCyclop;
-        }
-        else if ($this.hasClass("enemyHarpy")){
-          typeProperties = enemyPropertiesHarpy;
-        }
-        else if ($this.hasClass("enemyBlackKnight")){
-          typeProperties = enemyPropertiesBlackKnight;
+        switch(true){
+          case ($this.hasClass("enemyMummy")):
+            typeProperties = enemyPropertiesMummy;
+            break;
+
+          case ($this.hasClass("enemyBehemoth")):
+            typeProperties = enemyPropertiesBehemoth;
+            break;
+
+          case ($this.hasClass("enemyEnt")):
+            typeProperties = enemyPropertiesEnt;
+            break;
+
+          case ($this.hasClass("enemyMedusa")):
+            typeProperties = enemyPropertiesMedusa;
+            break;
+
+          case ($this.hasClass("enemyCyclop")):
+            typeProperties = enemyPropertiesCyclop;
+            break;
+
+          case ($this.hasClass("enemyHarpy")):
+            typeProperties = enemyPropertiesHarpy;
+            break;
+
+          case ($this.hasClass("enemyBlackKnight")):
+            typeProperties = enemyPropertiesBlackKnight;
+            break;
         }
 
         if (magic === "armagedon"){
@@ -918,6 +931,7 @@ $(document).ready(function() {
       createEnemy(25, "mummy");
       createPortal(30000, 2);
     }
+
     function level2(){
       container.css("background-image", "url(./images/Battleback_snow2.png)");
       moveSystem(30, 890, 70, 570);
@@ -926,6 +940,7 @@ $(document).ready(function() {
       createEnemy(15, "mummy");
       createPortal(30000, 3);
     }
+
     function level3(){
       container.css("background-image", "url(./images/Battleback_snow3.png)");
       moveSystem(30, 890, 70, 570);
@@ -934,6 +949,7 @@ $(document).ready(function() {
       createEnemy(10, "harpy");
       createPortal(30000, 4);
     }
+
     function level4(){
       container.css("background-image", "url(./images/Battleback_snow4.png)");
       moveSystem(30, 890, 70, 570);
@@ -943,6 +959,7 @@ $(document).ready(function() {
       createEnemy(3, "harpy");
       createPortal(30000, 5);
     }
+
     function level5(){
       container.css("background-image", "url(./images/Battleback_snow5.png)");
       moveSystem(30, 890, 70, 570);
@@ -952,6 +969,7 @@ $(document).ready(function() {
       createEnemy(5, "medusa");
       createPortal(40000, 6);
     }
+    
     function level6(){
       container.css("background-image", "url(./images/Battleback_snow6.png)");
       moveSystem(30, 890, 70, 570);
@@ -1076,7 +1094,7 @@ $(document).ready(function() {
       menuSong.pause();
       startGame();
     });
-    
+
     optionsBtn.on("click", function(){
       menuText.addClass("hide");
       backBtn.addClass("show");
