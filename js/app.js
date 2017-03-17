@@ -985,7 +985,7 @@ $(document).ready(function() {
         clearInterval($(this).attr("data-interval"));
         $(this).stop();
       })
-      container.children().not("div.sprite").not("div.portal").remove();
+      container.children().not("div.sprite").not("div.portal").not("div.backToMenu").remove();
       blackScreen.fadeIn(200).fadeOut(200);
       sprite.css({top: 400, left: 0});
       for (var i = 0; i < 9999; i++){
@@ -1173,6 +1173,10 @@ $(document).ready(function() {
       menuContainer.addClass("hide");
       menuSong.pause();
       startGame();
+    });
+
+    $(".backToMenu").on("click", function(){
+      gameOver();
     });
   }
 
