@@ -24,6 +24,16 @@ body {
   -webkit-transform: translateY(-50%); /* Chrome, Safari, Opera */
   transform: translateY(-50%);
 }
+.backToMenu {
+  position: absolute;
+  cursor: pointer;
+  right: 10px;
+  top: 10px;
+  padding: 7px;
+  color: Aqua;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1500;
+}
 .spells {
   position: absolute;
   top: 0;
