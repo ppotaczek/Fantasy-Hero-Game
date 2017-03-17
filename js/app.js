@@ -864,7 +864,7 @@ $(document).ready(function() {
       var tip = $("#tip");
       if ($("#inputName").val().length > 12){
         console.log("max 12");
-        tip.text("Maximum 12 characters");
+        tip.text("Error! Max 12 characters");
       }
       else {
         $(this).off();
@@ -969,7 +969,7 @@ $(document).ready(function() {
       createEnemy(5, "medusa");
       createPortal(40000, 6);
     }
-    
+
     function level6(){
       container.css("background-image", "url(./images/Battleback_snow6.png)");
       moveSystem(30, 890, 70, 570);
@@ -1028,7 +1028,9 @@ $(document).ready(function() {
   function highscore(method){
     var arrKeys = [];
     var arrValues = [];
+    var finalResult = $("#result").text();
 
+    finalResult = parseInt(finalResult);
     $.map(scores, function(value, key) {
       arrKeys.push(key);
       arrValues.push(value);
@@ -1036,11 +1038,10 @@ $(document).ready(function() {
     arrKeys.reverse();
     arrValues.reverse();
 
-    if (method === "add"){
+    if (method === "add" && typeof finalResult === 'number' && finalResult < 13000){
       var results = app.database().ref();
       var finalObj = {};
       var finalName = $("#inputName").val();
-      var finalResult = $("#result").text();
       arrKeys.push(finalResult);
       arrKeys.sort(function(a, b){return b-a});
       var realIndex = $.inArray(finalResult, arrKeys);
